@@ -1,0 +1,490 @@
+<!-- MAIN CONTENT -->
+<div class="main">
+    <div class="main-content board">
+        <div class="row">
+            <div class="col-12">
+                <div class="box project">
+                    <div class="box-header">
+                        <h4 class="box-title">Kanban Board</h4>
+                        <a class="btn btn-primary" href="/admin/testtask"><i class="fas fa-plus mr-5"></i>Add Task</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <div class="kanban-board card mb-0 pd-0">
+                    <div class="box-body pd-0">
+                        <div class="kanban-cont">
+
+                            <!--To-Do List-->
+                            <div class="kanban-list kanban-list-to-do">
+                                <div class="kanban-header">
+                                    <h6 class="card-title">To-Do List</h6>
+                                </div>
+
+                                <% if (cardsTodo.length > 0) { %>
+                                    <div class="kanban-wrap ui-sortable">
+                                        <% cardsTodo.forEach(card => { %>
+                                            <div class="panel">
+                                                <div class="kanban-box item-box ui-sortable-handle" data-card-id="<%= card.id %>" data-card-status="To-Do">
+                                                    <div class="content-box">
+                                                        <h6 class="title fs-16"><%= card.title %></h6>
+                                                        <p class="description"><%= card.description %></p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-calendar align-middle pr-4"></i>
+                                                            <span class="badge badge-warning-light"><%= card.start %></span>
+                                                            <i class="bx bx-move-horizontal align-middle"></i>
+                                                            <span class="badge badge-warning-light"><%= card.due_date %></span>
+                                                        </p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-list-check align-middle" style=" font-size: 30px;"></i>
+                                                            <span><%= card.incompleteTasks %>/<%= card.totalTasks %></span>
+                                                        </p>
+
+                                                        <div class="progress skill-progress mt-5 mb-15" style="height:7px;">
+                                                            <div class="progress-bar progress-animated" style="width: 78%; height:7px;" role="progressbar">
+                                                                <span class="sr-only">78% Complete</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex justify-content-between text-primary" data-toggle="modal" data-target="#add_task_modal<%= card.id %>">
+                                                                <i class="bx bxs-plus-circle" style="font-size: 40px;"></i>
+                                                            </div>
+                                                            <button class="btn btn-success" data-toggle="modal" data-target="#view_card_modal<%= card.id %>" style="">
+                                                                View
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                <% } else { %>
+                                    <p>No tasks in To-Do</p>
+                                <% } %>
+
+                                <div class="btn-add-card">
+                                    <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal" data-target="#add_card_modal">
+                                        <i class="fas fa-plus mr-14"></i>Add a card
+                                    </a>
+                                </div>
+
+                            </div>
+                            <!--To-Do List END-->
+
+                            <!--Progress-->
+                            <div class="kanban-list kanban-progress">
+                                <div class="kanban-header">
+                                    <h6 class="card-title">Progress</h6>
+                                </div>
+
+                                <% if (progressCards && progressCards.length > 0) { %>
+                                    <div class="kanban-wrap ui-sortable">
+                                        <% progressCards.forEach(card => { %>
+                                            <div class="panel">
+                                                <div class="kanban-box item-box ui-sortable-handle" data-card-id="<%= card.id %>" data-card-status="Progress">
+                                                    <div class="content-box">
+                                                        <h6 class="title fs-16"><%= card.title %></h6>
+                                                        <p class="description"><%= card.description %></p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-calendar align-middle pr-4"></i>
+                                                            <span class="badge badge-warning-light"><%= card.start %></span>
+                                                            <i class="bx bx-move-horizontal align-middle"></i>
+                                                            <span class="badge badge-warning-light"><%= card.due_date %></span>
+                                                        </p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-list-check align-middle" style=" font-size: 30px;"></i>
+                                                            <span><%= card.incompleteTasks %>/<%= card.totalTasks %></span>
+                                                        </p>
+
+                                                        <div class="progress skill-progress mt-5 mb-15" style="height:7px;">
+                                                            <div class="progress-bar progress-animated" style="width: <%= card.progressPercent %>%; height:7px;" role="progressbar">
+                                                                <span class="sr-only"><%= card.progressPercent %>% Complete</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex justify-content-between text-primary" data-toggle="modal" data-target="#add_task_modal<%= card.id %>">
+                                                                <i class="bx bxs-plus-circle" style="font-size: 40px;"></i>
+                                                            </div>
+                                                            <button class="btn btn-success" data-toggle="modal" data-target="#view_card_modal<%= card.id %>">View</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <% include('/partials/modals/add_task_modal', { card }) %>
+                                            <% include('/partials/modals/view_card_modal', { card }) %>
+                                            
+                                        <% }) %>
+                                    </div>
+                                <% } else { %>
+                                    <p>Add Cards!!!</p>
+                                <% } %>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        var checkboxes = document.querySelectorAll('.task-checkbox');
+                                        checkboxes.forEach(function (checkbox) {
+                                            checkbox.addEventListener('change', function () {
+                                                if (this.checked) {
+                                                    var taskId = this.value;
+                                                    var cardId = this.getAttribute('data-card-id');
+                                                    var userId = <%= employeeId %>;
+
+                                                    var xhr = new XMLHttpRequest();
+                                                    xhr.open('POST', '/handle_task_completion', true);
+                                                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                                    xhr.onreadystatechange = function () {
+                                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                                            console.log(xhr.responseText);
+                                                        }
+                                                    };
+                                                    xhr.send('user_id=' + userId + '&card_id=' + cardId + '&task_id=' + taskId);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
+                                <div class="btn-add-card">
+                                    <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal" data-target="#add_card_modal">
+                                        <i class="fas fa-plus mr-14"></i>Add a card
+                                    </a>
+                                </div>
+                            </div>
+                            <!--Progress End-->
+
+                            <!-- Review -->
+                            <div class="kanban-list kanban-review">
+                                <div class="kanban-header">
+                                    <h6 class="card-title">Review</h6>
+                                </div>
+
+                                <% if (cardsReview && cardsReview.length > 0) { %>
+                                    <div class="kanban-wrap ui-sortable">
+                                        <% cardsReview.forEach(card => { %>
+                                            <div class="panel">
+                                                <div class="kanban-box item-box ui-sortable-handle"
+                                                    data-card-id="<%= card.id %>" data-card-status="To-Do">
+
+                                                    <div class="content-box">
+                                                        <h6 class="title fs-16"><%= card.title %></h6>
+                                                        <p class="description"><%= card.description %></p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-calendar align-middle pr-4"></i>
+                                                            <span class="badge badge-warning-light"><%= card.start %></span>
+                                                            <i class="bx bx-move-horizontal align-middle"></i>
+                                                            <span class="badge badge-warning-light"><%= card.due_date %></span>
+                                                        </p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-list-check align-middle" style="font-size: 30px;"></i>
+                                                            <span><%= card.incompleteTasks %>/<%= card.totalTasks %></span>
+                                                        </p>
+
+                                                        <div class="progress skill-progress mt-5 mb-15" style="height:7px;">
+                                                            <div class="progress-bar progress-animated"
+                                                                style="width: <%= card.progress %>%; height:7px;" role="progressbar">
+                                                                <span class="sr-only"><%= card.progress %>% Complete</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex justify-content-between text-primary" data-toggle="modal"
+                                                                data-target="#add_task_modal<%= card.id %>">
+                                                                <i class="bx bxs-plus-circle" style="font-size: 40px;"></i>
+                                                            </div>
+                                                            <button class="btn btn-success" data-toggle="modal"
+                                                                data-target="#view_card_modal<%= card.id %>">View</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <%- include('partials/modals/add_task_modal', { cardId: card.id }) %>
+                                            <%- include('partials/modals/view_card_modal', { card: card }) %>
+                                        <% }) %>
+                                    </div>
+                                <% } else { %>
+                                    <p>Please add Cards!!!</p>
+                                <% } %>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        var checkboxes = document.querySelectorAll('.task-checkbox');
+                                        checkboxes.forEach(function (checkbox) {
+                                            checkbox.addEventListener('change', function () {
+                                                if (this.checked) {
+                                                    var taskId = this.value;
+                                                    var cardId = this.getAttribute('data-card-id');
+                                                    var userId = <%= JSON.stringify(employeeId) %>;
+
+                                                    var xhr = new XMLHttpRequest();
+                                                    xhr.open('POST', '/handle_task_completion', true);
+                                                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                                    xhr.onreadystatechange = function () {
+                                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                                            console.log(xhr.responseText);
+                                                        }
+                                                    };
+                                                    xhr.send('user_id=' + userId + '&card_id=' + cardId + '&task_id=' + taskId);
+                                                }
+                                            });
+                                        });
+                                    });
+                                </script>
+
+                                <div class="btn-add-card">
+                                    <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal"
+                                        data-target="#add_card_modal">
+                                        <i class="fas fa-plus mr-14"></i>Add a card
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Review End -->
+
+                            <!-- Approved -->
+                            <div class="kanban-list kanban-approved">
+                                <div class="kanban-header">
+                                    <h6 class="card-title">Approved</h6>
+                                </div>
+                                <% if (cardsApproved.length > 0) { %>
+                                    <div class="kanban-wrap ui-sortable">
+                                        <% cardsApproved.forEach((card) => { %>
+                                            <div class="panel">
+                                                <div class="kanban-box item-box ui-sortable-handle" data-card-id="<%= card.id %>" data-card-status="To-Do">
+                                                    <div class="content-box">
+                                                        <h6 class="title fs-16"><%= card.title %></h6>
+                                                        <p class="description"><%= card.description %></p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-calendar align-middle pr-4"></i>
+                                                            <span class="badge badge-warning-light"><%= card.start %></span>
+                                                            <i class="bx bx-move-horizontal align-middle"></i>
+                                                            <span class="badge badge-warning-light"><%= card.due_date %></span>
+                                                        </p>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <p class="mb-2">
+                                                            <i class="bx bx-list-check align-middle" style="font-size: 30px;"></i>
+                                                            <span><%= card.incompleteTasks %>/<%= card.totalTasks %></span>
+                                                        </p>
+
+                                                        <div class="progress skill-progress mt-5 mb-15" style="height:7px;">
+                                                            <div class="progress-bar progress-animated" style="width: <%= card.progress %>%; height:7px;" role="progressbar">
+                                                                <span class="sr-only"><%= card.progress %>% Complete</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="divider d-flex align-items-center my-3"></div>
+
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex justify-content-between text-primary" data-toggle="modal" data-target="#add_task_modal<%= card.id %>">
+                                                                <i class="bx bxs-plus-circle" style="font-size: 40px;"></i>
+                                                            </div>
+                                                            <button class="btn btn-success" data-toggle="modal" data-target="#view_card_modal<%= card.id %>">View</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <%- include('partials/modals/add_task_modal', { cardId: card.id }) %>
+                                            <%- include('partials/modals/view_card_modal', { card, tasks: card.tasks, employeeId }) %>
+                                        <% }) %>
+                                    </div>
+                                <% } else { %>
+                                    <p>No approved cards found.</p>
+                                <% } %>
+
+                                <script>
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        const checkboxes = document.querySelectorAll('.task-checkbox');
+                                        checkboxes.forEach(function (checkbox) {
+                                            checkbox.addEventListener('change', function () {
+                                                if (this.checked) {
+                                                    const taskId = this.value;
+                                                    const cardId = this.getAttribute('data-card-id');
+                                                    const userId = <%= JSON.stringify(employeeId) %>;
+
+                                                    const xhr = new XMLHttpRequest();
+                                                    xhr.open('POST', '/handle-task-completion', true);
+                                                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                                                    xhr.onreadystatechange = function () {
+                                                        if (xhr.readyState === 4 && xhr.status === 200) {
+                                                            const successMessage = xhr.responseText;
+                                                            showBootstrapWarning(successMessage);
+                                                        }
+                                                    };
+                                                    xhr.send(`user_id=${userId}&card_id=${cardId}&task_id=${taskId}`);
+                                                }
+                                            });
+                                        });
+
+                                        function showBootstrapWarning(message) {
+                                            const alert = document.createElement('div');
+                                            alert.className = 'alert alert-warning alert-dismissible fade show';
+                                            alert.setAttribute('role', 'alert');
+                                            alert.innerHTML = `
+                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>${message}`;
+                                            document.body.appendChild(alert);
+                                            setTimeout(() => document.body.removeChild(alert), 5000);
+                                        }
+                                    });
+                                </script>
+
+                                <div class="btn-add-card">
+                                    <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal" data-target="#add_card_modal">
+                                        <i class="fas fa-plus mr-14"></i>Add a card
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Approved End -->
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <!-- Edit Card Modal -->
+        <div id="edit_card_modal" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Edit Card</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="form-group">
+                                <label>Image Card</label>
+                                <input class="form-control" type="file">
+                            </div>
+                            <div class="form-group">
+                                <label>Card Name</label>
+                                <input type="text" class="form-control" value="Food Website hero area">
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <div class="cal-icon">
+                                    <input class="form-control" type="date" value="">
+                                </div>
+                            </div>
+                            <div class="submit-section text-center">
+                                <button class="btn btn-primary submit-btn">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Card Modal -->
+        <div id="add_card_modal" class="modal custom-modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Add Card</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="/admin/kanban/add-card">
+                            <div class="form-group">
+                                <label>Card Name</label>
+                                <input type="text" class="form-control" name="cardTitle">
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select name="status" class="select form-control form-select">
+                                    <option selected>todo</option>
+                                    <option>progress</option>
+                                    <option>review</option>
+                                    <option>approved</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <div class="cal-icon">
+                                    <input class="form-control" type="date" name="start">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Due Date</label>
+                                <div class="cal-icon">
+                                    <input class="form-control" type="date" name="dueDate">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea class="form-control" name="description"></textarea>
+                            </div>
+                            <div class="submit-section text-center">
+                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Edit Card Modal -->  
+    </div>
+</div>
+<!-- End Main Content -->
+
+<%- include('partials/footer') %>
+
+<!-- Bootstrap Typeahead -->
+<script src="/js/typeahead.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const taskname = <%- JSON.stringify(taskNames) %>;
+        $('.typeahead[name="taskname"]').typeahead({ source: taskname });
+    });
+</script>
+
+<!-- Kanban drag & update status -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        $('.kanban-wrap').on('sortupdate', function (event, ui) {
+            const cardId = ui.item.data('card-id');
+            const newStatus = ui.item.closest('.kanban-list').find('.card-title').text().trim();
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/kanban/update-status',
+                data: { cardId, newStatus },
+                success: function (res) {
+                    console.log(res);
+                }
+            });
+        });
+    });
+</script>

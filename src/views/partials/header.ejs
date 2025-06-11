@@ -1,0 +1,111 @@
+<%
+    const loguser = session?.user || 'User';
+    const logemail = session?.email || '';
+    const logpicture = session?.picture || 'default.png';
+    const pagetitle = typeof title !== 'undefined' ? title : '';
+%>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="sidebar-logo">
+        <a href="/admin">
+            <img src="/images/logo.svg" alt="ProjectFlow logo">
+        </a>
+        <div class="sidebar-close" id="sidebar-close">
+            <i class='bx bx-x'></i>
+        </div>
+    </div>
+
+    <!-- SIDEBAR MENU -->
+    <div class="simlebar-sc" data-simplebar>
+        <ul class="sidebar-menu tf">
+            <li class="sidebar-submenu">
+                <a href="/admin/dashboard" class="sidebar-menu-dropdown">
+                    <i class='bx bxs-home'></i>
+                    <span>Dashboard</span>
+                    <div class="dropdown-icon">
+                        <i class='bx bx-chevron-down'></i>
+                    </div>
+                </a>
+                <ul class="sidebar-menu sidebar-menu-dropdown-content">
+                    <li><a href="/admin/dashboard">Dashboard</a></li>
+                </ul>
+            </li>
+
+            <li class="sidebar-submenu">
+                <a href="/admin/project" class="sidebar-menu-dropdown">
+                    <i class='bx bxs-bolt'></i>
+                    <span>Project</span>
+                    <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+                </a>
+                <ul class="sidebar-menu sidebar-menu-dropdown-content">
+                    <li><a href="/admin/project">Overview</a></li>
+                    <li><a href="/admin/project/list">Project List</a></li>
+                </ul>
+            </li>
+
+            <li class="sidebar-submenu">
+                <a href="/admin/clients" class="sidebar-menu-dropdown">
+                    <i class='bx bxs-user'></i>
+                    <span>Client</span>
+                    <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+                </a>
+                <ul class="sidebar-menu sidebar-menu-dropdown-content">
+                    <li><a href="/admin/clients">Client List</a></li>
+                    <li><a href="/admin/client-details">Client Details</a></li>
+                </ul>
+            </li>
+
+            <li class="sidebar-submenu">
+                <a href="/admin/documentation" class="sidebar-menu-dropdown">
+                    <i class='bx bxs-book'></i>
+                    <span>Documentation</span>
+                    <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+                </a>
+                <ul class="sidebar-menu sidebar-menu-dropdown-content">
+                    <li><a href="/admin/documentation">Docs Home</a></li>
+                    <li><a href="/admin/documentation/api">API Reference</a></li>
+                </ul>
+            </li>
+
+            <li><a href="/admin/board"><i class='bx bxs-dashboard'></i><span>Board-Flow</span></a></li>
+
+            <li>
+                <a class="darkmode-toggle" id="darkmode-toggle" onclick="switchTheme()">
+                    <div><i class='bx bx-   cog mr-10'></i><span>darkmode</span></div>
+                    <span class="darkmode-switch"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!-- END SIDEBAR -->
+
+<!-- Main Header -->
+<div class="main-header">
+    <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle">
+            <i class='bx bx-menu'></i>
+        </div>
+        <div class="main-title"><%= pagetitle %></div>
+    </div>
+
+    <div class="d-flex align-items-center">
+        <div class="dropdown d-inline-block mt-12">
+            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                
+                <span class="info d-xl-inline-block color-span">
+                    <span class="d-block fs-20 font-w600"><%= loguser %></span>
+                    <span class="d-block mt-7"><%= logemail %></span>
+                </span> 
+            </button>
+            <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="#"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span>Profile</span></a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-danger" href="/logout"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span>Logout</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Main Header -->

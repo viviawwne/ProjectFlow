@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title>Novo Projeto</title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <div class="main">
+        <div class="main-content">
+            <div class="container">
+                <div class="box">
+                    <div class="box-header">
+                        <h4 class="box-title">Criar Novo Projeto</h4>
+                    </div>
+                    <div class="box-body">
+                        <% if (success) { %>
+                            <div class="alert alert-success"><%= success %></div>
+                        <% } %>
+                        <% if (error) { %>
+                            <div class="alert alert-danger"><%= error %></div>
+                        <% } %>
+
+                        <form action="/admin/project/create" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label>Project ID</label>
+                                <input type="text" name="project_id" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Project Title</label>
+                                <input type="text" name="project_title" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input type="text" name="department" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select name="priority" class="form-control" required>
+                                    <option value="High">High</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Low">Low</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Client</label>
+                                <input type="text" name="client" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" name="start_date" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input type="date" name="end_date" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea name="description" class="form-control" rows="4"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Attachment (Imagem ou Documento)</label>
+                                <input type="file" name="attachment_file" class="form-control">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Status de Trabalho</label>
+                                <select name="work_status" class="form-control" required>
+                                    <option value="Pending">Pending</option>
+                                    <option value="On Progress">On Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary mt-3">Criar Projeto</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay"></div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header', { title: pagetitle }) %>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        <div class="main-content dashboard">
+            <div class="row">
+                
+                <!-- Total Projects Card -->
+                <div class="col-6 col-xl-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-body d-flex pb-0">
+                            <div class="me-auto">
+                                <h5 class="box-title">Total projects</h5>
+                                <div class="d-flex align-items-center">
+                                    <h4 class="mb-0 font-wb fs-30 mt-23"><%= totalProjects %></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Task Done Card -->
+                <div class="col-6 col-xl-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-body d-flex pb-0">
+                            <div class="me-auto">
+                                <h5 class="box-title mb-36">Total Task Done</h5>
+                                <div class="progress skill-progress mb-10" style="height:10px;">
+                                    <div class="progress-bar bg-primary progress-animated"
+                                         style="width: '<%= percentCompleted %>%'; height:10px;" role="progressbar">
+                                        <span class="sr-only"><%= percentCompleted %>% Complete</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <h4 class="numb font-wb fs-30"><%= totalCompleted %></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Clients Card -->
+                <div class="col-6 col-xl-12 col-sm-12">
+                    <div class="box">
+                        <div class="box-body d-flex pb-0">
+                            <div class="me-auto">
+                                <h4 class="numb fs-30 font-wb"><%= totalClients %></h4>
+                                <h5 class="card-title fs-18 font-w400">Total Clients</h5>
+                            </div>
+                            <div id="total-revenue-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+
+    <div class="overlay"></div>
+
+    <%- include('../partials/footer') %>

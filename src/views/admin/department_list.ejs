@@ -1,0 +1,93 @@
+<%- include('../../partials/head') %>
+<%- include('../../partials/header') %>
+
+<div class="main">
+    <div class="main-content user">
+        <% if (success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+        <% if (error) { %>
+            <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="box project">
+                    <div class="box-header">
+                        <h4 class="box-title">Department List</h4>
+                        <a class="btn btn-primary" data-toggle="modal" data-target="#add_card_modal">Add</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xl-12">
+                <div class="box">
+                    <div class="box-body">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Name</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% departments.forEach(dpt => { %>
+                                    <tr>
+                                        <td><%= dpt.department_id %></td>
+                                        <td><%= dpt.department_name %></td>
+                                        <td><%= dpt.location %></td>
+                                    </tr>
+                                <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="add_card_modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <form action="/admin/departments/add" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Department</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- Form fields -->
+                    <div class="form-group">
+                        <label>Manager</label>
+                        <input name="username" type="text" class="form-control" list="manager-list" required>
+                        <datalist id="manager-list">
+                            <% usernames.forEach(u => { %>
+                                <option value="<%= u %>">
+                            <% }) %>
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Code</label>
+                        <input name="deptCode" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input name="deptName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input name="location" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

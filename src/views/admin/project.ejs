@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head') %>
+    <title><%= title %></title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+        <div class="main-content project">
+            <div class="row">
+                <div class="col-9 col-xl-7 col-md-8 col-sm-12">
+                    <div class="box card-box">
+                        <div class="icon-box bg-color-6 d-block">
+                            <div class="content text-center color-6">
+                                <h5 class="title-box fs-17 font-w500">Total Project</h5>
+                                <div class="themesflat-counter fs-18 font-wb">
+                                    <span class="number"><%= totalCount %>+</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="icon-box bg-color-7 d-block">
+                            <div class="content text-center color-7">
+                                <h5 class="title-box fs-17 font-w500">Pending Project</h5>
+                                <div class="themesflat-counter fs-18 font-wb">
+                                    <span class="number"><%= pendingCount %>+</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="icon-box bg-color-8 d-block">
+                            <div class="content text-center color-8">
+                                <h5 class="title-box fs-17 font-w500">On Going Project</h5>
+                                <div class="themesflat-counter fs-18 font-wb">
+                                    <span class="number"><%= progressCount %>+</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="icon-box bg-color-9 d-block">
+                            <div class="content text-center color-9">
+                                <h5 class="title-box fs-17 font-w500">Complete Project</h5>
+                                <div class="themesflat-counter fs-18 font-wb">
+                                    <span class="number"><%= completedCount %>+</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-3 col-xl-5 col-md-4 col-sm-12">
+                    <div class="box h-100 d-flex align-items-center">
+                        <a class="create d-flex bg-primary justify-content-center" href="/admin/project/create">
+                            <div class="icon color-white pt-4 pr-8">
+                                <i class='bx bx-plus-circle'></i>
+                            </div>
+                            <div class="content">
+                                <h5 class="color-white">Create New Project</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projetos recentes -->
+            <div class="row">
+                <div class="">
+                    <div class="box-header pt-0 pl-0 ms-0 mb-4 mt-4 border-bottom-0 responsive-header">
+                        <h4 class="box-title fs-22">Recent Project Update</h4>
+                    </div>
+                    <div class="row">
+                        <% recentProjects.forEach(project => { %>
+                            <div class="col-3 col-xl-6 col-md-6 col-sm-12">
+                                <div class="box left-dot">
+                                    <div class="box-body">
+                                        <div class="row">
+                                            <div class="col-12 mb-10">
+                                                <div class="mt-0 text-start">
+                                                    <a href="/admin/project/<%= project.id %>" class="box-title mb-0 mt-1 mb-3 font-w600 fs-18"><%= project.project_title %></a>
+                                                    <p class="fs-14 font-w500 text-muted mb-6"><%= project.department %></p>
+                                                    <span class="fs-13  mt-2 text-muted"><%= project.description %></span>
+                                                </div>
+                                                <img src="/images/icon/<%= project.department %>.svg" alt="img" class="img-box">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de projetos -->
+            <div class="row">
+                <div class="col-12 col-md-12">
+                    <div class="box">
+                        <div class="box-header">
+                            <h4 class="box-title">Recent Project List</h4>
+                            <a class="btn btn-success" href="/admin/project/list">View All</a>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table table-vcenter text-nowrap table-bordered dataTable no-footer" id="task-profile">
+                                    <thead>
+                                        <tr class="top">
+                                            <th class="text-center">No</th>
+                                            <th>Task</th>
+                                            <th>Priority</th>
+                                            <th>Start Date</th>
+                                            <th>Deadline</th>
+                                            <th>Progress</th>
+                                            <th>Work Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% projectList.forEach(project => { %>
+                                            <tr>
+                                                <td class="text-center"><%= project.project_id %></td>
+                                                <td><a href="#" class="d-flex"><span><%= project.project_title %></span></a></td>
+                                                <td>
+                                                    <% let badge = project.priority === "High" ? "badge-danger-light" :
+                                                                  project.priority === "Medium" ? "badge-warning-light" :
+                                                                  "badge-success-light"; %>
+                                                    <span class="badge <%= badge %>"><%= project.priority %></span>
+                                                </td>
+                                                <td><%= project.start_date %></td>
+                                                <td><%= project.end_date %></td>
+                                                <td>
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar bg-primary w-30"></div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <% let workbadge = project.work_status === "Pending" ? "badge-danger" :
+                                                                       project.work_status === "On Progress" ? "badge-warning" :
+                                                                       "badge-success"; %>
+                                                    <span class="badge <%= workbadge %>"><%= project.work_status %></span>
+                                                </td>
+                                            </tr>
+                                        <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- Fim main-content -->
+    </div> <!-- Fim main -->
+
+    <div class="overlay"></div>
+        <!-- JS GLOBAL -->
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/libs/simplebar/simplebar.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/script.js"></script>
+
+</body>
+</html>
