@@ -37,4 +37,5 @@ exports.deleteDepartment = async (req, res) => {
     console.error('Erro ao deletar departamento:', err);
     res.status(500).send('Erro ao deletar departamento');
   }
+
 };

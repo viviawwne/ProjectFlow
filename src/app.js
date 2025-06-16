@@ -39,7 +39,6 @@ const deleteProjectRoutes = require('./routes/admin/project/delete/deleteProject
 const projectDetailsRoutes = require('./routes/admin/projectDetailsRoutes');
 const adminProjectController = require('./controllers/admin/AdminProjectController');
 const departmentRoutes = require('./routes/admin/department/departmentRoutes');
-const createDepartmentRoutes = require('./routes/admin/department/createDepartmentRoutes');
 
 // Aplicação das rotas
 app.use('/', rootRoutes);
@@ -50,7 +49,6 @@ app.use('/admin/project', projectListRoutes);
 app.use('/admin/project', deleteProjectRoutes);
 app.use('/admin/project-details', projectDetailsRoutes);
 app.use('/admin/departments', departmentRoutes);
-app.use('/admin/departments', createDepartmentRoutes);
 
 
 // Rota para o dashboard de projetos

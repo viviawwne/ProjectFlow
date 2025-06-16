@@ -58,7 +58,7 @@ module.exports = {
 
             // Renderizar com os dados reais
             res.render('admin/dashboard', {
-                pagetitle: 'Welcome to ProjectFlow',
+                pagetitle: 'Bem-Vindo ao ProjectFlow',
                 totalProjects,
                 totalCompleted,
                 percentCompleted,

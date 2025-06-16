@@ -5211,3 +5211,29 @@ body.dark .notification-list .list .no-seen {
 .custom-scroll {
     height: 100%
 }
+
+/* Tabela modo escuro */
+body.dark table,
+body.dark .table,
+body.dark .table-bordered,
+body.dark .table-vcenter {
+    background-color: #23243a !important;
+    color: #fff !important;
+}
+
+body.dark th,
+body.dark td {
+    background-color: #23243a !important;
+    color: #fff !important;
+    border-color: #333652 !important;
+}
+
+body.dark tr.top {
+    background: #2d2e4a !important;
+}
+
+body.dark .table thead th {
+    background-color: #23243a !important;
+    color: #fff !important;
+    border-color: #333652 !important;
+}

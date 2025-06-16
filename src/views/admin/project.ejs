@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <%- include('../partials/head') %>
     <title><%= title %></title>
@@ -7,7 +7,7 @@
 <body>
     <%- include('../partials/header') %>
 
-    <!-- MAIN CONTENT -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="main">
         <div class="main-content project">
             <div class="row">
@@ -15,7 +15,7 @@
                     <div class="box card-box">
                         <div class="icon-box bg-color-6 d-block">
                             <div class="content text-center color-6">
-                                <h5 class="title-box fs-17 font-w500">Total Project</h5>
+                                <h5 class="title-box fs-17 font-w500">Total de Projetos</h5>
                                 <div class="themesflat-counter fs-18 font-wb">
                                     <span class="number"><%= totalCount %>+</span>
                                 </div>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="icon-box bg-color-7 d-block">
                             <div class="content text-center color-7">
-                                <h5 class="title-box fs-17 font-w500">Pending Project</h5>
+                                <h5 class="title-box fs-17 font-w500">Projetos Pendentes</h5>
                                 <div class="themesflat-counter fs-18 font-wb">
                                     <span class="number"><%= pendingCount %>+</span>
                                 </div>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="icon-box bg-color-8 d-block">
                             <div class="content text-center color-8">
-                                <h5 class="title-box fs-17 font-w500">On Going Project</h5>
+                                <h5 class="title-box fs-17 font-w500">Projetos em Andamento</h5>
                                 <div class="themesflat-counter fs-18 font-wb">
                                     <span class="number"><%= progressCount %>+</span>
                                 </div>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="icon-box bg-color-9 d-block">
                             <div class="content text-center color-9">
-                                <h5 class="title-box fs-17 font-w500">Complete Project</h5>
+                                <h5 class="title-box fs-17 font-w500">Projetos Concluídos</h5>
                                 <div class="themesflat-counter fs-18 font-wb">
                                     <span class="number"><%= completedCount %>+</span>
                                 </div>
@@ -55,7 +55,7 @@
                                 <i class='bx bx-plus-circle'></i>
                             </div>
                             <div class="content">
-                                <h5 class="color-white">Create New Project</h5>
+                                <h5 class="color-white">Criar Novo Projeto</h5>
                             </div>
                         </a>
                     </div>
@@ -66,7 +66,7 @@
             <div class="row">
                 <div class="">
                     <div class="box-header pt-0 pl-0 ms-0 mb-4 mt-4 border-bottom-0 responsive-header">
-                        <h4 class="box-title fs-22">Recent Project Update</h4>
+                        <h4 class="box-title fs-22">Atualizações Recentes de Projetos</h4>
                     </div>
                     <div class="row">
                         <% recentProjects.forEach(project => { %>
@@ -96,21 +96,21 @@
                 <div class="col-12 col-md-12">
                     <div class="box">
                         <div class="box-header">
-                            <h4 class="box-title">Recent Project List</h4>
-                            <a class="btn btn-success" href="/admin/project/list">View All</a>
+                            <h4 class="box-title">Lista Recente de Projetos</h4>
+                            <a class="btn btn-success" href="/admin/project/list">Ver Todos</a>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
                                 <table class="table table-vcenter text-nowrap table-bordered dataTable no-footer" id="task-profile">
                                     <thead>
                                         <tr class="top">
-                                            <th class="text-center">No</th>
-                                            <th>Task</th>
-                                            <th>Priority</th>
-                                            <th>Start Date</th>
-                                            <th>Deadline</th>
-                                            <th>Progress</th>
-                                            <th>Work Status</th>
+                                            <th class="text-center">Nº</th>
+                                            <th>Tarefa</th>
+                                            <th>Prioridade</th>
+                                            <th>Data de Início</th>
+                                            <th>Prazo</th>
+                                            <th>Progresso</th>
+                                            <th>Status do Trabalho</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -122,7 +122,7 @@
                                                     <% let badge = project.priority === "High" ? "badge-danger-light" :
                                                                   project.priority === "Medium" ? "badge-warning-light" :
                                                                   "badge-success-light"; %>
-                                                    <span class="badge <%= badge %>"><%= project.priority %></span>
+                                                    <span class="badge <%= badge %>"><%= project.priority === "High" ? "Alta" : project.priority === "Medium" ? "Média" : "Baixa" %></span>
                                                 </td>
                                                 <td><%= project.start_date %></td>
                                                 <td><%= project.end_date %></td>
@@ -135,7 +135,9 @@
                                                     <% let workbadge = project.work_status === "Pending" ? "badge-danger" :
                                                                        project.work_status === "On Progress" ? "badge-warning" :
                                                                        "badge-success"; %>
-                                                    <span class="badge <%= workbadge %>"><%= project.work_status %></span>
+                                                    <span class="badge <%= workbadge %>">
+                                                        <%= project.work_status === "Pending" ? "Pendente" : project.work_status === "On Progress" ? "Em Andamento" : "Concluído" %>
+                                                    </span>
                                                 </td>
                                             </tr>
                                         <% }) %>
@@ -151,12 +153,11 @@
     </div> <!-- Fim main -->
 
     <div class="overlay"></div>
-        <!-- JS GLOBAL -->
+    <!-- JS GLOBAL -->
     <script src="/libs/jquery/jquery.min.js"></script>
     <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/libs/simplebar/simplebar.min.js"></script>
     <script src="/js/main.js"></script>
     <script src="/js/script.js"></script>
-
 </body>
 </html>

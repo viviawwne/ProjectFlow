@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
   <%- include('../partials/head') %>
-  <title><%= project.project_title %> - Project Details</title>
+  <title><%= project.project_title %> - Detalhes do Projeto</title>
 </head>
 <body>
   <%- include('../partials/header') %>
@@ -22,7 +22,7 @@
             </div>
             <div class="divider"></div>
             <div class="box-body content">
-              <h4 class="title">Project Description</h4>
+              <h4 class="title">Descrição do Projeto</h4>
               <p class="fs-18 font-w400 font-main mt-27 mb-29"><%= project.description %></p>
               <ul class="list-img">
                 <% for (let i = 1; i <= 4; i++) { %>
@@ -45,8 +45,8 @@
             <div class="tab-menu-heading hremp-tabs p-0">
               <div class="tabs-menu1">
                 <ul class="nav panel-tabs w-100 d-flex">
-                  <li class=""><a href="#tab1" class="active" data-bs-toggle="tab">Task</a></li>
-                  <li><a href="#tab2" data-bs-toggle="tab">Files</a></li>
+                  <li class=""><a href="#tab1" class="active" data-bs-toggle="tab">Tarefas</a></li>
+                  <li><a href="#tab2" data-bs-toggle="tab">Arquivos</a></li>
                 </ul>
               </div>
             </div>
@@ -60,13 +60,13 @@
                     <table class="table table-vcenter text-nowrap table-bordered">
                       <thead>
                         <tr>
-                          <th>No</th>
-                          <th>Task</th>
-                          <th>Priority</th>
-                          <th>Start Date</th>
-                          <th>Deadline</th>
-                          <th>Work Status</th>
-                          <th>Actions</th>
+                          <th>Nº</th>
+                          <th>Tarefa</th>
+                          <th>Prioridade</th>
+                          <th>Data de Início</th>
+                          <th>Prazo</th>
+                          <th>Status do Trabalho</th>
+                          <th>Ações</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -75,17 +75,25 @@
                             <tr>
                               <td class="text-center"><%= index + 1 %></td>
                               <td><%= task.task_name %></td>
-                              <td><span class="badge badge-danger-light"><%= task.priority %></span></td>
+                              <td>
+                                <span class="badge badge-danger-light">
+                                  <%= task.priority === "High" ? "Alta" : task.priority === "Medium" ? "Média" : "Baixa" %>
+                                </span>
+                              </td>
                               <td><%= task.start_date %></td>
                               <td><%= task.due_date %></td>
-                              <td><span class="badge badge-warning"><%= task.status %></span></td>
                               <td>
-                                <a href="/admin/task/complete/<%= task.id %>" class="btn btn-success submit-btn">Complete</a>
+                                <span class="badge badge-warning">
+                                  <%= task.status === "Pending" ? "Pendente" : task.status === "On Progress" ? "Em Andamento" : "Concluído" %>
+                                </span>
+                              </td>
+                              <td>
+                                <a href="/admin/task/complete/<%= task.id %>" class="btn btn-success submit-btn">Concluir</a>
                               </td>
                             </tr>
                           <% }) %>
                         <% } else { %>
-                          <tr><td colspan="7">No tasks found</td></tr>
+                          <tr><td colspan="7">Nenhuma tarefa encontrada</td></tr>
                         <% } %>
                       </tbody>
                     </table>
@@ -96,15 +104,15 @@
                 <div class="tab-pane" id="tab2">
                   <div class="box-body pl-15 pr-15 pb-20 table-responsive activity mt-10">
                     <% if (files.length > 0) { %>
-                      <a href="#" data-toggle="modal" data-target="#assign" class="btn btn-primary mb-3">Upload Files</a>
+                      <a href="#" data-toggle="modal" data-target="#assign" class="btn btn-primary mb-3">Enviar Arquivos</a>
                       <table class="table table-vcenter text-nowrap table-bordered mw-100">
                         <thead>
                           <tr>
-                            <th>No</th>
-                            <th>File Name</th>
-                            <th>Task Name</th>
-                            <th>Upload Date</th>
-                            <th>Actions</th>
+                            <th>Nº</th>
+                            <th>Nome do Arquivo</th>
+                            <th>Tarefa</th>
+                            <th>Data de Upload</th>
+                            <th>Ações</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -115,15 +123,15 @@
                               <td><%= file.task %></td>
                               <td><%= file.date %></td>
                               <td>
-                                <a href="/images/work/<%= file.attachment %>" class="btn btn-primary" download>Download</a>
-                                <a href="/admin/file/delete/<%= file.id %>" class="btn btn-danger submit-btn">Delete</a>
+                                <a href="/images/work/<%= file.attachment %>" class="btn btn-primary" download>Baixar</a>
+                                <a href="/admin/file/delete/<%= file.id %>" class="btn btn-danger submit-btn">Excluir</a>
                               </td>
                             </tr>
                           <% }) %>
                         </tbody>
                       </table>
                     <% } else { %>
-                      <p>No files found</p>
+                      <p>Nenhum arquivo encontrado</p>
                     <% } %>
                   </div>
                 </div>
