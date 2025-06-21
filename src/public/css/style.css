@@ -40,8 +40,8 @@
     --menu-item-active-bg: rgba(60, 33, 247, 0.15);
     --box-border-radius: 10px;
     --sidebar-size: 400px;
-    --sidebar-logo-img-size: 57px;
-    --sidebar-logo-size: 80px;
+    --sidebar-logo-img-size: 180px;
+    --sidebar-logo-size: 180px;
     --profile-image-size: 45px;
     --main-header-height: 136px;
     --shadow: 0 0 50px 0px rgb(42, 89, 152/ 10%);
@@ -1371,7 +1371,7 @@ ul {
         transform: scale(3);
         opacity: 0;
     }
-}
+.sidebar}
 
 .border-primary {
     border-color: var(--main-color) !important;
@@ -1395,10 +1395,14 @@ ul {
     position: fixed;
     top: 30px;
     left: 30px;
+    bottom: 30px;
     width: var(--sidebar-size);
-    height: 100vh;
+    /*height: 100vh;*/
     box-shadow: var(--shadow);
     border-radius: 30px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
 }
 
 .dark .sidebar {
@@ -1407,6 +1411,7 @@ ul {
 
 .sidebar-logo {
     height: var(--sidebar-logo-size);
+    margin-top: auto;
     position: relative;
     padding: 74px 0;
     display: flex;
@@ -1422,11 +1427,13 @@ ul {
 .sidebar-menu {
     padding: 43px 43px 63px;
     list-style-type: none;
-    /* overflow-y: auto; */
+    overflow: hidden;
 }
 
 .simlebar-sc {
-    height: 80vh;
+    /*height: 80vh;*/
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 .table-responsive::-webkit-scrollbar {
@@ -1438,26 +1445,29 @@ ul {
     background-color: var(--main-color);
 }
 
-.sidebar-menu::-webkit-scrollbar-track,
+/*.sidebar-menu::-webkit-scrollbar-track,
 .message-box::-webkit-scrollbar-track,
-.message-list::-webkit-scrollbar-track {
+.message-list::-webkit-scrollbar-track {*/ 
+.message-box::-webkit-scrollbar-track, .message-list::-webkit-scrollbar-track {
     /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
     border-radius: 10px;
     background-color: transparent;
     position: absolute;
 }
 
-.sidebar-menu::-webkit-scrollbar,
+/*.sidebar-menu::-webkit-scrollbar,
 .message-box::-webkit-scrollbar,
-.message-list::-webkit-scrollbar {
+.message-list::-webkit-scrollbar { */
+.message-box::-webkit-scrollbar, .message-list::-webkit-scrollbar {
     width: 5px;
     background-color: transparent;
 }
 
-.sidebar-menu::-webkit-scrollbar-thumb,
+/*.sidebar-menu::-webkit-scrollbar-thumb,
 .message-box::-webkit-scrollbar-thumb,
 .message-list::-webkit-scrollbar-thumb,
-.table-responsive::-webkit-scrollbar-track {
+.table-responsive::-webkit-scrollbar-track { */
+.message-box::-webkit-scrollbar-thumb, .message-list::-webkit-scrollbar-thumb, .table-responsive::-webkit-scrollbar-track {
     border-radius: 5px;
     background-color: var(--menu-item-active-bg);
 }
@@ -5051,7 +5061,7 @@ body.dark .notification-list .list .no-seen {
 
 .simplebar-content-wrapper::-webkit-scrollbar,
 .simplebar-hide-scrollbar::-webkit-scrollbar {
-    display: none
+    display: none;
 }
 
 .simplebar-content:after,
@@ -5236,4 +5246,122 @@ body.dark .table thead th {
     background-color: #23243a !important;
     color: #fff !important;
     border-color: #333652 !important;
+}
+/* ==================================================================== */
+/* =================== INÍCIO DO CÓDIGO RESPONSIVO ================== */
+/* ==================================================================== */
+
+/* Este bloco ajusta o layout para diferentes tamanhos de tela.
+   Começamos de telas maiores para menores.
+*/
+
+/* === Telas Médias (Tablets em modo paisagem) - até 992px === */
+@media (max-width: 992px) {
+    /* Reduz o padding do conteúdo principal para economizar espaço */
+    .main-content {
+        padding: 20px;
+    }
+
+    /* Transforma os cards de 4 colunas em 2 colunas */
+    .box.card-box {
+        flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+    }
+
+    .box.card-box .icon-box {
+        width: calc(50% - 15px); /* Cada item ocupa quase metade da largura */
+        margin-bottom: 30px; /* Adiciona espaço embaixo quando quebrar a linha */
+    }
+
+    /* Ajusta o layout dos formulários de busca para empilhar */
+    .search-form .row > div {
+        margin-bottom: 15px; /* Espaço entre os campos quando empilhados */
+    }
+}
+
+
+/* === Telas Pequenas (Tablets em modo retrato e celulares) - até 768px === */
+@media (max-width: 768px) {
+    
+    /* Ajusta o cabeçalho principal */
+    .main-header {
+        padding-left: 20px;
+        padding-right: 20px;
+        height: auto; /* Altura automática para acomodar o conteúdo */
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .main-header .d-flex:last-child {
+        margin-top: 15px; /* Espaço entre a busca e o perfil do usuário */
+    }
+
+    /* Ajusta o padding do conteúdo principal para telas de celular */
+    .main-content {
+        padding: 15px;
+        margin-top: 150px; /* Aumenta a margem para não ficar atrás do cabeçalho maior */
+    }
+
+    /* Garante que os cards fiquem em uma única coluna */
+    .box.card-box .icon-box {
+        width: 100%; /* Cada card ocupa a largura total */
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    /* Ajusta a página de login para telas pequenas */
+    .loginpd {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    section.login .box {
+        padding: 20px;
+    }
+
+    /* Ajusta o layout do quadro Kanban para melhor visualização */
+    .kanban-cont {
+        padding-bottom: 10px;
+    }
+    .kanban-list {
+        min-width: 300px; /* Reduz a largura mínima das colunas do Kanban */
+        width: 300px;
+    }
+
+    /* Ajusta o formulário de chat */
+    .form-chat form .message-form-chat span.message-text {
+        width: calc(100% - 150px); /* Ajusta a largura do campo de texto */
+    }
+}
+
+
+/* === Telas Muito Pequenas (Celulares) - até 576px === */
+@media (max-width: 576px) {
+    
+    .main-content {
+        margin-top: 140px;
+    }
+
+    .main-title {
+        font-size: 24px !important; /* Diminui o título principal */
+    }
+
+    .box {
+        padding: 15px; /* Menos padding dentro dos boxes */
+    }
+
+    /* Garante que os botões em grupos ocupem a largura toda para facilitar o toque */
+    .box.client .group-btn {
+        flex-direction: column;
+    }
+    .box.client .group-btn a {
+        width: 100%;
+        text-align: center;
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    /* Ajusta o formulário de login */
+    section.login .box-body {
+        padding: 30px 0;
+    }
 }
