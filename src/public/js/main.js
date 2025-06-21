@@ -58,7 +58,63 @@ document.querySelectorAll('.sidebar-submenu').forEach(e => {
 });
 
 // Sidebar toggle e persistência
+// ============== INÍCIO DA LÓGICA CORRIGIDA DA SIDEBAR ==============
+
+// Seleciona os elementos do DOM
 const overlay = document.querySelector('.overlay');
+const mobileToggleBtn = document.getElementById('mobile-toggle'); // Botão de Abrir (Hambúrguer)
+const sidebarCloseBtn = document.getElementById('sidebar-close');  // Botão de Fechar (X)
+const bodyElement = document.body;
+
+// Função para salvar o estado da sidebar (colapsado ou expandido)
+function updateSidebarState(isCollapsed) {
+    if (isCollapsed) {
+        bodyElement.classList.add('sidebar-collapse');
+        localStorage.setItem('sidebar', 'collapsed');
+    } else {
+        bodyElement.classList.remove('sidebar-collapse');
+        localStorage.setItem('sidebar', 'expanded');
+    }
+}
+
+// Evento para ABRIR a sidebar
+if (mobileToggleBtn) {
+    mobileToggleBtn.addEventListener('click', () => {
+        console.log('Botão ABRIR clicado');
+        updateSidebarState(false); // false = não está colapsada (ou seja, expandir)
+    });
+}
+
+// Evento para FECHAR a sidebar
+if (sidebarCloseBtn) {
+    sidebarCloseBtn.addEventListener('click', () => {
+        console.log('Botão FECHAR clicado');
+        updateSidebarState(true); // true = está colapsada
+    });
+}
+
+// Evento para FECHAR a sidebar ao clicar no overlay
+if (overlay) {
+    overlay.addEventListener('click', () => {
+        console.log('Overlay clicado');
+        updateSidebarState(true); // true = está colapsada
+    });
+}
+
+// Ao carregar a página, verifica se a sidebar deveria começar fechada
+// Isso respeita a escolha do usuário da última visita
+document.addEventListener('DOMContentLoaded', () => {
+    // Adiciona a classe base para o CSS funcionar
+    bodyElement.classList.add('sidebar-expand');
+    
+    // Verifica o estado salvo no localStorage
+    if (localStorage.getItem('sidebar') === 'collapsed') {
+        bodyElement.classList.add('sidebar-collapse');
+    }
+});
+// ============== FIM DA LÓGICA CORRIGIDA DA SIDEBAR ==============
+
+/*const overlay = document.querySelector('.overlay');
 const mobileToggle = document.getElementById('mobile-toggle');
 const sidebarClose = document.getElementById('sidebar-close');
 const sidebar = document.querySelector('.sidebar');
@@ -91,6 +147,7 @@ if (sidebarClose) {
 if (localStorage.getItem('sidebar') === 'collapsed') {
     body.classList.add('sidebar-collapse');
 }
+*/
 
 // Ativa o item de menu atual
 $(function () {

@@ -1371,7 +1371,7 @@ ul {
         transform: scale(3);
         opacity: 0;
     }
-.sidebar}
+}
 
 .border-primary {
     border-color: var(--main-color) !important;
@@ -1644,7 +1644,7 @@ ul {
     transition: 0.3s ease-in-out;
 }
 
-.sidebar-expand.active .main-header {
+.body.sidebar-collapse .main-header {
     padding-left: 40px;
     transition: 0.3s ease-in-out;
 }
@@ -1814,7 +1814,7 @@ button#page-header-user-dropdown {
     border-color: #eff2f7
 }
 
-.sidebar-expand.active .sidebar {
+.body.sidebar-collapse .sidebar {
     transition: transform 0.3s ease-in-out;
     max-width: 100%;
     z-index: 999;
@@ -1832,7 +1832,7 @@ button#page-header-user-dropdown {
     transition: 0.3s ease-in-out;
 }
 
-.sidebar-expand.active .main {
+.body.sidebar-collapse .main {
     padding-left: 0;
     transition: 0.3s ease-in-out;
 }
@@ -1854,7 +1854,7 @@ button#page-header-user-dropdown {
     margin-top: 0px;
 }
 
-.sidebar-expand.active .mobile-toggle {
+.body.sidebar-collapse .mobile-toggle {
     display: block;
     transition: 0.3s all;
 }
@@ -1877,7 +1877,7 @@ button#page-header-user-dropdown {
         transform: translateX(-120%);
     }
 
-    .sidebar-expand.active .sidebar {
+    .body.sidebar-collapse .sidebar {
         transform: translateX(0);
     }
 
@@ -1900,7 +1900,7 @@ button#page-header-user-dropdown {
         display: block;
     }
 
-    .sidebar-expand.active .main-header {
+    .body.sidebar-collapse .main-header {
         position: relative;
     }
 
@@ -5247,63 +5247,50 @@ body.dark .table thead th {
     color: #fff !important;
     border-color: #333652 !important;
 }
-/* ==================================================================== */
-/* =================== INÍCIO DO CÓDIGO RESPONSIVO ================== */
-/* ==================================================================== */
-
 /* Este bloco ajusta o layout para diferentes tamanhos de tela.
-   Começamos de telas maiores para menores.
 */
-
 /* === Telas Médias (Tablets em modo paisagem) - até 992px === */
 @media (max-width: 992px) {
-    /* Reduz o padding do conteúdo principal para economizar espaço */
     .main-content {
         padding: 20px;
     }
 
-    /* Transforma os cards de 4 colunas em 2 colunas */
     .box.card-box {
-        flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha */
+        flex-wrap: wrap; 
     }
 
     .box.card-box .icon-box {
-        width: calc(50% - 15px); /* Cada item ocupa quase metade da largura */
-        margin-bottom: 30px; /* Adiciona espaço embaixo quando quebrar a linha */
+        width: calc(50% - 15px); 
+        margin-bottom: 30px; 
     }
 
-    /* Ajusta o layout dos formulários de busca para empilhar */
     .search-form .row > div {
-        margin-bottom: 15px; /* Espaço entre os campos quando empilhados */
+        margin-bottom: 15px; 
     }
 }
-
-
 /* === Telas Pequenas (Tablets em modo retrato e celulares) - até 768px === */
 @media (max-width: 768px) {
     
-    /* Ajusta o cabeçalho principal */
     .main-header {
         padding-left: 20px;
         padding-right: 20px;
-        height: auto; /* Altura automática para acomodar o conteúdo */
+        height: auto; 
         flex-direction: column;
         align-items: flex-start;
     }
 
     .main-header .d-flex:last-child {
-        margin-top: 15px; /* Espaço entre a busca e o perfil do usuário */
+        margin-top: 15px; 
     }
 
     /* Ajusta o padding do conteúdo principal para telas de celular */
     .main-content {
         padding: 15px;
-        margin-top: 150px; /* Aumenta a margem para não ficar atrás do cabeçalho maior */
+        margin-top: 150px; 
     }
 
-    /* Garante que os cards fiquem em uma única coluna */
     .box.card-box .icon-box {
-        width: 100%; /* Cada card ocupa a largura total */
+        width: 100%; 
         margin-right: 0;
         margin-left: 0;
     }
@@ -5318,18 +5305,16 @@ body.dark .table thead th {
         padding: 20px;
     }
 
-    /* Ajusta o layout do quadro Kanban para melhor visualização */
+
     .kanban-cont {
         padding-bottom: 10px;
     }
     .kanban-list {
-        min-width: 300px; /* Reduz a largura mínima das colunas do Kanban */
+        min-width: 300px; 
         width: 300px;
     }
-
-    /* Ajusta o formulário de chat */
     .form-chat form .message-form-chat span.message-text {
-        width: calc(100% - 150px); /* Ajusta a largura do campo de texto */
+        width: calc(100% - 150px); 
     }
 }
 
@@ -5342,14 +5327,14 @@ body.dark .table thead th {
     }
 
     .main-title {
-        font-size: 24px !important; /* Diminui o título principal */
+        font-size: 24px !important; 
     }
 
     .box {
-        padding: 15px; /* Menos padding dentro dos boxes */
+        padding: 15px; 
     }
 
-    /* Garante que os botões em grupos ocupem a largura toda para facilitar o toque */
+    
     .box.client .group-btn {
         flex-direction: column;
     }
@@ -5359,8 +5344,6 @@ body.dark .table thead th {
         margin-right: 0 !important;
         margin-left: 0 !important;
     }
-
-    /* Ajusta o formulário de login */
     section.login .box-body {
         padding: 30px 0;
     }
