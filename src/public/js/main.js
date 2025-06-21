@@ -58,6 +58,7 @@ document.querySelectorAll('.sidebar-submenu').forEach(e => {
 });
 
 // Sidebar toggle e persistência
+
 // ============== INÍCIO DA LÓGICA CORRIGIDA DA SIDEBAR ==============
 
 // Seleciona os elementos do DOM
@@ -77,27 +78,32 @@ function updateSidebarState(isCollapsed) {
     }
 }
 
-// Evento para ABRIR a sidebar
+// Evento para ABRIR/FECHAR a sidebar com o botão principal (hambúrguer)
 if (mobileToggleBtn) {
     mobileToggleBtn.addEventListener('click', () => {
-        console.log('Botão ABRIR clicado');
-        updateSidebarState(false); // false = não está colapsada (ou seja, expandir)
+        // Alterna a classe 'sidebar-collapse' no body
+        const isCollapsed = bodyElement.classList.toggle('sidebar-collapse');
+        // Atualiza o estado no localStorage para lembrar a escolha
+        updateSidebarState(isCollapsed);
+        console.log('Botão Toggle clicado. Estado colapsado:', isCollapsed);
     });
 }
 
-// Evento para FECHAR a sidebar
+// Evento para FECHAR a sidebar com o botão 'X' de dentro do menu
 if (sidebarCloseBtn) {
     sidebarCloseBtn.addEventListener('click', () => {
-        console.log('Botão FECHAR clicado');
+        // Apenas fecha, não alterna
         updateSidebarState(true); // true = está colapsada
+        console.log('Botão Fechar (X) clicado.');
     });
 }
 
-// Evento para FECHAR a sidebar ao clicar no overlay
+// Evento para FECHAR a sidebar ao clicar no overlay (fundo escuro)
 if (overlay) {
     overlay.addEventListener('click', () => {
-        console.log('Overlay clicado');
+        // Apenas fecha, não alterna
         updateSidebarState(true); // true = está colapsada
+        console.log('Overlay clicado.');
     });
 }
 
@@ -112,51 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         bodyElement.classList.add('sidebar-collapse');
     }
 });
+
+
 // ============== FIM DA LÓGICA CORRIGIDA DA SIDEBAR ==============
-
-/*const overlay = document.querySelector('.overlay');
-const mobileToggle = document.getElementById('mobile-toggle');
-const sidebarClose = document.getElementById('sidebar-close');
-const sidebar = document.querySelector('.sidebar');
-
-function updateSidebarState(collapsed) {
-    if (collapsed) {
-        body.classList.add('sidebar-collapse');
-        localStorage.setItem('sidebar', 'collapsed');
-    } else {
-        body.classList.remove('sidebar-collapse');
-        localStorage.setItem('sidebar', 'expanded');
-    }
-}
-
-if (mobileToggle) {
-    mobileToggle.addEventListener('click', () => {
-        const isCollapsed = body.classList.toggle('sidebar-collapse');
-        updateSidebarState(body.classList.contains('sidebar-collapse'));
-    });
-}
-
-if (sidebarClose) {
-    sidebarClose.addEventListener('click', () => {
-        body.classList.add('sidebar-collapse');
-        updateSidebarState(true);
-    });
-}
-
-// Ao carregar a página, aplica o estado salvo
-if (localStorage.getItem('sidebar') === 'collapsed') {
-    body.classList.add('sidebar-collapse');
-}
-*/
-
-// Ativa o item de menu atual
-$(function () {
-    const path = window.location.href;
-    $(".sidebar-menu a").each(function () {
-        if (this.href === path) {
-            $(this).addClass("active");
-        } else {
-            $(this).removeClass("active");
-        }
-    });
-});
