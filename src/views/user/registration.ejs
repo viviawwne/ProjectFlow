@@ -1,0 +1,108 @@
+<%- include('../partials/head') %>
+
+<!-- MAIN CONTENT -->
+<div style="bottom: 75px">
+  <div class="loginpd">
+    <div class="main-content">
+      <section class="login singup">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="box">
+              <div class="box-header d-flex justify-content-between">
+                <a href="/">
+                  <img class="logosvg" src="/images/logo.svg" alt="">
+                </a>
+                <div class="action-reg">
+                  <h4 class="fs-30">Register</h4>
+                  <p>Create new account</p>
+                </div>
+              </div>
+
+              <div class="line"></div>
+
+              <div class="box-body">
+                <div class="auth-content my-auto">
+                  <% if (error) { %>
+                    <div class="alert alert-danger"><%= error %></div>
+                  <% } %>
+                  <% if (success) { %>
+                    <div class="alert alert-success"><%= success %></div>
+                  <% } %>
+
+                  <form class="mt-6 pt-2" action="/user/register" method="POST">
+                    <div class="mb-3">
+                      <label class="form-label mb-14">Username</label>
+                      <input required type="text" name="username" class="form-control" placeholder="Your Name">
+                    </div>
+
+                    <div class="mb-3 mt-24">
+                      <label class="form-label mb-14">E-Mail</label>
+                      <input required type="email" name="email" class="form-control" placeholder="Your Email">
+                    </div>
+
+                    <div class="mb-3 mt-24">
+                      <label class="form-label mb-14">Password</label>
+                      <div class="input-group auth-pass-inputgroup">
+                        <input required type="password" id="passwordInput" name="password" class="form-control" placeholder="Enter password">
+                        <button class="btn shadow-none ms-0" type="button" id="togglePassword"><i class="far fa-eye-slash"></i></button>
+                      </div>
+                    </div>
+
+                    <div class="row mb-4">
+                      <div class="col">
+                        <div class="form-check">
+                          <input required class="form-check-input" type="checkbox" id="terms">
+                          <label class="form-check-label" for="terms">
+                            I agree to the <a href="#" class="text-primary">Terms</a> & <a href="#" class="text-primary">Privacy</a>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mb-3 mt-29">
+                      <button type="submit" class="btn bg-primary color-white w-100 fs-18 font-w500">Create Account</button>
+                    </div>
+                  </form>
+
+                  <div class="mt-59 text-center">
+                    <p class="text-muted mb-0 fs-14">Already have an account? <a href="/user/login" class="text-primary fw-semibold">Sign in</a></p>
+                  </div>
+
+                  <div class="mt-37 text-center">
+                    <ul class="list-inline mb-0">
+                      <li class="list-inline-item"><a href="#" class="social-list-item text-white"><i class='bx bxl-facebook-square'></i></a></li>
+                      <li class="list-inline-item"><a href="#" class="social-list-item text-white"><i class='bx bxl-twitter'></i></a></li>
+                      <li class="list-inline-item"><a href="#" class="social-list-item text-white"><i class='bx bxl-linkedin-square'></i></a></li>
+                      <li class="list-inline-item"><a href="#" class="social-list-item text-white"><i class='bx bxl-google-plus'></i></a></li>
+                    </ul>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<!-- END MAIN CONTENT -->
+
+<script>
+  document.getElementById("togglePassword").addEventListener("click", function () {
+    var passwordInput = document.getElementById("passwordInput");
+    var toggleBtnIcon = this.querySelector("i");
+    if (passwordInput.type === "password") {
+      passwordInput.type = "text";
+      toggleBtnIcon.classList.remove("fa-eye-slash");
+      toggleBtnIcon.classList.add("fa-eye");
+    } else {
+      passwordInput.type = "password";
+      toggleBtnIcon.classList.remove("fa-eye");
+      toggleBtnIcon.classList.add("fa-eye-slash");
+    }
+  });
+</script>
+
+<%- include('../partials/footer') %>

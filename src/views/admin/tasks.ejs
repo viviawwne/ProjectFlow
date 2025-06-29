@@ -1,0 +1,159 @@
+<!-- views/admin/tasks.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head') %>
+  <%- include('../partials/header') %>
+
+  <div class="main">
+    <div class="main-content board">
+      <div class="row">
+        <div class="col-12">
+          <div class="box card-box">
+
+            <!-- Botão Assign Task -->
+            <div class="icon-box bg-color-4">
+              <a class="create d-flex" href="#" data-toggle="modal" data-target="#assign">
+                <div class="icon bg-white">
+                  <i class="bx bx-plus"></i>
+                </div>
+                <div class="content d-flex align-items-center">
+                  <h5 class="color-white">Assign New Task</h5>
+                </div>
+              </a>
+            </div>
+
+            <!-- Botão Create Task -->
+            <div class="icon-box bg-color-4">
+              <a class="create d-flex" href="#" data-toggle="modal" data-target="#add_project">
+                <div class="icon bg-white">
+                  <i class="bx bx-plus"></i>
+                </div>
+                <div class="content d-flex align-items-center">
+                  <h5 class="color-white">Create New Task</h5>
+                </div>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Create Task -->
+      <div id="add_project" class="modal custom-modal fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Create Task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="/admin/tasks">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Task Name</label>
+                      <input class="form-control" name="task_name" type="text" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Project Name</label>
+                      <input type="text" class="form-control typeahead" name="project_name" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label>Priority</label>
+                      <select class="form-control form-select" name="priority" required>
+                        <option selected>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Start Date</label>
+                      <input class="form-control" name="start_date" type="date" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Due Date</label>
+                      <input class="form-control" name="due_date" type="date" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea rows="4" class="form-control" name="description" placeholder="Enter your message here" required></textarea>
+                </div>
+                <div class="submit-section">
+                  <button type="submit" class="btn btn-primary submit-btn">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal: Assign Task -->
+      <div id="assign" class="modal custom-modal fade" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Assign Task</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" action="/admin/taskassign">
+                <div class="row">
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Employee Name</label>
+                      <input type="text" class="form-control typeahead" name="username" autocomplete="off">
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <label>Task Name</label>
+                      <input type="text" class="form-control typeahead" name="taskname" autocomplete="off">
+                    </div>
+                  </div>
+                </div>
+                <div class="submit-section">
+                  <button type="submit" class="btn btn-primary submit-btn">Save</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="overlay"></div>
+
+  <!-- Scripts -->
+  <!-- Scripts -->
+  <script src="/libs/jquery/jquery.min.js"></script>
+  <script src="/js/typeahead.js"></script>
+  <script>
+    $(document).ready(function () {
+        const usernames = <%- JSON.stringify(usernames || []) %>;
+        const tasknames = <%- JSON.stringify(tasknames || []) %>;
+        const projectnames = <%- JSON.stringify(projectnames || []) %>;
+
+        $('.typeahead[name="username"]').typeahead({ source: usernames });
+        $('.typeahead[name="taskname"]').typeahead({ source: tasknames });
+        $('.typeahead[name="project_name"]').typeahead({ source: projectnames });
+    });
+  </script>
+</html>

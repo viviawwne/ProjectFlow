@@ -35,7 +35,11 @@
 
                             <div class="form-group">
                                 <label>Department</label>
-                                <input type="text" name="department" class="form-control" required>
+                                <select name="department" class="form-control" required>
+                                    <% departments.forEach(dep => { %>
+                                        <option value="<%= dep.department_name %>"><%= dep.department_name %></option>
+                                    <% }) %>
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -49,7 +53,11 @@
 
                             <div class="form-group">
                                 <label>Client</label>
-                                <input type="text" name="client" class="form-control" required>
+                                <select name="client" class="form-control" required>
+                                <% clients.forEach(client => { %>
+                                    <option value="<%= client.id %>"><%= client.name %></option>
+                                <% }) %>
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -69,7 +77,7 @@
 
                             <div class="form-group">
                                 <label>Attachment (Imagem ou Documento)</label>
-                                <input type="file" name="attachment_file" class="form-control">
+                                <input type="file" name="attachment" class="form-control">
                             </div>
 
                             <div class="form-group">
