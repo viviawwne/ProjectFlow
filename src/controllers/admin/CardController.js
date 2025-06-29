@@ -103,3 +103,34 @@ exports.updateCardStatusPost = async (req, res) => {
         res.status(500).send('Erro interno no servidor');
     }
 };
+
+// POST /admin/cards
+exports.createCard = async (req, res) => {
+  const { cardTitle, status, start, dueDate, description, tasks } = req.body;
+  const userId = req.session?.user?.id || 1;
+
+  try {
+    const conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    const taskList = tasks.split(',').map(t => t.trim()); // transforma string em array
+
+    // Insere na tabela cards (agora com mais campos)
+    const [cardResult] = await conn.execute(
+      'INSERT INTO cards (title, status, start, due_date, description) VALUES (?, ?, ?, ?, ?, ?)',
+      [cardTitle, status, start, dueDate, description, taskList.join(',')]
+    );
+
+    const cardId = cardResult.insertId;
+
+    // Se desejar: lógica para `completed_tasks` aqui
+
+    await conn.commit();
+    conn.release();
+
+    res.redirect('/admin/board'); // ou outro redirecionamento após sucesso
+  } catch (error) {
+    console.error(error);
+    res.render('partials/alert', { error: 'Erro ao adicionar card' });
+  }
+};

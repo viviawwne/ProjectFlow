@@ -4,9 +4,6 @@ const express = require('express');
 const router = express.Router();
 const AdminAuthController = require('../../controllers/admin/AdminAuthController');
 const AdminDashboardController = require('../../controllers/admin/AdminDashboardController');
-const TaskCompletationController = require('../../controllers/admin/TaskCompletationController');
-
-router.post('/handle_task_completation', TaskCompletationController.handleTaskCompletion);
 
 // Rota inicial de autenticação (login ou registro)
 router.get('/', AdminAuthController.renderOptions);

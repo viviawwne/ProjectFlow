@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
     <%- include('../partials/head') %>
+  </head>
+<body>
     <%- include('../partials/header') %>
-
 <!-- MAIN CONTENT -->
 <div class="main">
     <div class="main-content board">
@@ -68,7 +70,7 @@
                                                             </div>
                                                             <button
                                                                     class="btn btn-success" data-toggle="modal"
-                                                                    data-target="#view_card_modal<%= card.id %>" style="">
+                                                                    data-target="#view_card_modal<%= card.id %>">
                                                                 View
                                                             </button>
                                                         </div>
@@ -94,7 +96,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="form-group">
                                                                             <label>Card ID</label>
-                                                                            <select name="cardid" class="select form-control">
+                                                                            <select name="card.id" class="select form-control">
                                                                                 <option><%= card.id %></option>
                                                                             </select>
                                                                         </div>
@@ -216,8 +218,7 @@
                                                 </div>
                                             </div>
                                             <!-- View Card end Modal -->
-                                        <% } %>
-                                    <% ); %>
+                                        <% }); %>
                                 </div>
                                 <div class="btn-add-card">
                                     <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal"
@@ -300,7 +301,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="form-group">
                                                                             <label>Card ID</label>
-                                                                            <select name="cardid" class="select form-control">
+                                                                            <select name="card.id" class="select form-control">
                                                                                 <option><%= card.id %></option>
                                                                             </select>
                                                                         </div>
@@ -425,8 +426,7 @@
                                                 </div>
                                             </div>
                                             <!-- View Card end Modal -->
-                                        <% } %>
-                                    <% ); %>
+                                        <% }); %>
                                 </div>
                                 <div class="btn-add-card">
                                     <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal"
@@ -509,7 +509,7 @@
                                                                     <div class="col-sm-6">
                                                                         <div class="form-group">
                                                                             <label>Card ID</label>
-                                                                            <select name="cardid" class="select form-control">
+                                                                            <select name="card.id" class="select form-control">
                                                                                 <option><%= card.id %></option>
                                                                             </select>
                                                                         </div>
@@ -632,8 +632,7 @@
                                                 </div>
                                             </div>
                                             <!-- View Card end Modal -->
-                                        <% } %>
-                                    <% ); %>
+                                      <% }); %>
                                 </div>
                                 <div class="btn-add-card">
                                     <a class="dropdown-item font-w500 fs-16" href="#" data-toggle="modal"
@@ -654,26 +653,26 @@
 
                 <div class="panel">
                     <div class="kanban-box item-box ui-sortable-handle"
-                         data-card-id="<%= cardid %>" data-card-status="To-Do">
+                         data-card-id="<%= card.id %>" data-card-status="To-Do">
 
                         <div class="content-box">
-                            <h6 class="title fs-16"><%= row.title %></h6>
-                            <p class="description"><%= row.description %></p>
+                            <h6 class="title fs-16"><%= card.title %></h6>
+                            <p class="description"><%= card.description %></p>
 
                             <div class="divider d-flex align-items-center my-3"></div>
 
                             <p class="mb-2">
                                 <i class="bx bx-calendar align-middle pr-4"></i>
-                                <span class="badge badge-warning-light"><%= row.start %></span>
+                                <span class="badge badge-warning-light"><%= card.start %></span>
                                 <i class="bx bx-move-horizontal align-middle"></i>
-                                <span class="badge badge-warning-light"><%= row.due_date %></span>
+                                <span class="badge badge-warning-light"><%= card.due_date %></span>
                             </p>
 
                             <div class="divider d-flex align-items-center my-3"></div>
 
                             <p class="mb-2">
                                 <i class="bx bx-list-check align-middle" style="font-size: 30px;"></i>
-                                <span><%= row.incomplete_task_count %>/<%= row.total_task_count %></span>
+                                <span><%= card.incomplete_task_count %>/<%= card.total_task_count %></span>
                             </p>
 
                             <div class="progress skill-progress mt-5 mb-15" style="height:7px;">
@@ -688,11 +687,11 @@
                             <div class="d-flex justify-content-between">
                                 <div class="d-flex justify-content-between text-primary"
                                      data-toggle="modal"
-                                     data-target="#add_task_modal<%= cardid %>">
+                                     data-target="#add_task_modal<%= card.id %>">
                                     <i class="bx bxs-plus-circle" style="font-size: 40px;"></i>
                                 </div>
                                 <button class="btn btn-success" data-toggle="modal"
-                                        data-target="#view_card_modal<%= cardid %>" style="">
+                                        data-target="#view_card_modal<%= card.id %>">
                                     View
                                 </button>
                             </div>
@@ -701,7 +700,7 @@
                 </div>
 
                 <!-- Assign Task Modal -->
-                <div id="add_task_modal<%= cardid %>" class="modal custom-modal fade"
+                <div id="add_task_modal<%= card.id %>" class="modal custom-modal fade"
                      style="display: none;" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div class="modal-content">
@@ -713,13 +712,13 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form action="/cardassign" method="post">
+                                <form action="/admin/cardassign" method="post">
                                     <div class="row">
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label>Card ID</label>
                                                 <select name="cardid" class="select form-control">
-                                                    <option><%= cardid %></option>
+                                                    <option><%= card.id %></option>
                                                 </select>
                                             </div>
                                         </div>
@@ -744,12 +743,12 @@
                 <!-- Assign Task Modal End -->
 
                 <!-- View Card Modal -->
-                <div id="view_card_modal<%= cardid %>" class="modal custom-modal fade"
+                <div id="view_card_modal<%= card.id %>" class="modal custom-modal fade"
                      style="display: none;" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <span class="h2 me-2"><%= row.title %></span>
+                                <span class="h2 me-2"><%= card.title %></span>
                                 <button type="button" class="close" data-dismiss="modal"
                                         aria-label="Close">
                                     <span aria-hidden="true">×</span>
@@ -765,7 +764,7 @@
                                                     class="bx bx-notepad align-middle text-muted"
                                                     style="font-size: 130%;"></i>
                                                 Description</p>
-                                            <p class="px-3 mb-2 text"><%= row.description %></p>
+                                            <p class="px-3 mb-2 text"><%= card.description %></p>
                                             <div class="divider d-flex align-items-center my-4"></div>
 
                                             <!-- Priority Section -->
@@ -775,14 +774,14 @@
                                             </p>
                                             <p class="px-3 mb-2">
                                                 <% let badge = ""; %>
-                                                <% if (row.priority == "High") { %>
+                                                <% if (card.priority == "High") { %>
                                                     <% badge = "badge-danger-light"; %>
-                                                <% } else if (row.priority == "Medium") { %>
+                                                <% } else if (card.priority == "Medium") { %>
                                                     <% badge = "badge-warning-light"; %>
                                                 <% } else { %>
                                                     <% badge = "badge-success-light"; %>
                                                 <% } %>
-                                                <span class="ml-4 badge <%= badge %>"><%= row.priority %></span>
+                                                <span class="ml-4 badge <%= badge %>"><%= card.priority %></span>
                                             </p>
 
                                             <div class="divider d-flex align-items-center my-4"></div>
@@ -793,43 +792,44 @@
                                                     style="font-size: 130%;"></i> Timeline
                                             </p>
                                             <p class="px-3 mb-2">
-                                                <span class="badge badge-warning-light"><%= row.start %></span>
+                                                <span class="badge badge-warning-light"><%= card.start %></span>
                                                 <i class="bx bx-move-horizontal align-middle"></i>
-                                                <span class="badge badge-warning-light"><%= row.due_date %></span>
+                                                <span class="badge badge-warning-light"><%= card.due_date %></span>
                                             </p>
 
                                             <div class="divider d-flex align-items-center my-4"></div>
 
-                                            <!-- Tasks Section -->
-                                            <% tasks.forEach(function(task) { %>
-                                                <input type="checkbox"
-                                                       id="task_<%= task.id %>"
-                                                       class="task-checkbox"
-                                                       data-card-id="<%= row.id %>"
-                                                       name="tasks[]"
-                                                       value="<%= task.id %>">
-                                                <a href="/testtask/<%= task.id %>"
-                                                   for="task_<%= task.id %>"><%= task.task_name %></a>
+                                             <!-- Tasks Section CORRIGIDA -->
+                                                <% card.tasks.forEach(function(task) { %>
+                                                    <input type="checkbox"
+                                                        id="task_<%= task.id %>"
+                                                        class="task-checkbox"
+                                                        data-card-id="<%= card.id %>"
+                                                        name="tasks[]"
+                                                        value="<%= task.id %>">
+                                                    <label for="task_<%= task.id %>">
+                                                        <a href="/testtask/<%= task.id %>"><%= task.task_name %></a>
+                                                    </label>
 
-                                                <% let badge2 = ""; %>
-                                                <% if (task.priority == "High") { %>
-                                                    <% badge2 = "badge-danger-light"; %>
-                                                <% } else if (task.priority == "Medium") { %>
-                                                    <% badge2 = "badge-warning-light"; %>
-                                                <% } else { %>
-                                                    <% badge2 = "badge-success-light"; %>
-                                                <% } %>
+                                                    <% let badge2 = ""; %>
+                                                    <% if (task.priority === "High") { %>
+                                                        <% badge2 = "badge-danger-light"; %>
+                                                    <% } else if (task.priority === "Medium") { %>
+                                                        <% badge2 = "badge-warning-light"; %>
+                                                    <% } else { %>
+                                                        <% badge2 = "badge-success-light"; %>
+                                                    <% } %>
 
-                                                <span class="ml-4 badge <%= badge2 %>"><%= task.priority %></span>
-                                                <br>
-                                            <% }); %>
+                                                    <span class="ml-4 badge <%= badge2 %>"><%= task.priority %></span>
+                                                    <br>
+                                                <% }); %>
 
                                             <div class="divider d-flex align-items-center my-4"></div>
 
                                             <!-- Save Button Section -->
                                             <div class="col">
                                                 <div class="submit-section justify-content-center">
-                                                    <a href="/cardupdatest?data4=<%= encodeURIComponent(cardid) %>" class="btn btn-success submit-btn">
+                                                    <a href="/cardupdatest?data4=<%= encodeURIComponent(card.id) %>" class="btn btn-success submit-btn">
                                                         Update
                                                     </a>
                                                 </div>
@@ -843,8 +843,8 @@
                 </div>
                 <!-- View Card End Modal -->
 
-                <!-- Card Delete Modal -->
-                <div class="modal custom-modal fade" id="delete_project" role="dialog">
+                <!-- Card Delete Modal CORRIGIDO -->
+                <div class="modal custom-modal fade" id="delete_project_<%= card.id %>" role="dialog">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-body">
@@ -855,7 +855,7 @@
                                 <div class="modal-btn delete-action">
                                     <div class="row">
                                         <div class="col-6 mb-0">
-                                            <a href="/deleteproject?data=<%= encodeURIComponent(row.project_id) %>"
+                                            <a href="/deleteproject?data=<%= encodeURIComponent(card.id) %>"
                                                class="btn btn-primary continue-btn">Delete</a>
                                         </div>
                                         <div class="col-6 mb-0">
@@ -863,7 +863,7 @@
                                                class="btn btn-primary cancel-btn">Cancel</a>
                                         </div>
                                     </div>
-                                </div>
+                                </div> 
                             </div>
                         </div>
                     </div>
@@ -972,64 +972,67 @@
         </div>
         <!-- Edit Card Modal -->
 
-        <!-- Add Card Modal -->
-        <div id="add_card_modal" class="modal custom-modal fade" role="dialog">
+                <!-- Add Card Modal -->
+            <div id="add_card_modal" class="modal custom-modal fade" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Add Card</h4>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div class="modal-header">
+                    <h4 class="modal-title">Add Card</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="/admin/cards/add">
+
+                    <div class="form-group">
+                        <label>Card Name</label>
+                        <input type="text" class="form-control" name="cardTitle" required>
                     </div>
-                    <div class="modal-body">
 
-                        <form method="POST" action="/admin/cards/add">
-
-                            <div class="form-group">
-                                <label>Card Name</label>
-                                <input type="text" class="form-control" name="cardTitle" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Status</label>
-                                <select name="status" class="select form-control form-select" required>
-                                    <option value="todo" selected>To-Do</option>
-                                    <option value="progress">In Progress</option>
-                                    <option value="review">In Review</option>
-                                    <option value="approved">Approved</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Start Date</label>
-                                <div class="cal-icon">
-                                    <input class="form-control" type="date" name="start" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Due Date</label>
-                                <div class="cal-icon">
-                                    <input class="form-control" type="date" name="dueDate" required>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea class="form-control" name="description" rows="3"></textarea>
-                            </div>
-
-                            <div class="submit-section text-center">
-                                <button type="submit" class="btn btn-primary submit-btn">Submit</button>
-                            </div>
-
-                        </form>
-
-
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select name="status" class="select form-control form-select" required>
+                        <option value="todo" selected>To-Do</option>
+                        <option value="progress">In Progress</option>
+                        <option value="review">In Review</option>
+                        <option value="approved">Approved</option>
+                        </select>
                     </div>
+
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <div class="cal-icon">
+                        <input class="form-control" type="date" name="start" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <div class="cal-icon">
+                        <input class="form-control" type="date" name="dueDate" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tasks <small>(separadas por vírgula)</small></label>
+                        <input type="text" class="form-control" name="tasks" placeholder="Ex: tarefa 1, tarefa 2" required>
+                    </div>
+
+                    <div class="submit-section text-center">
+                        <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+                    </div>
+
+                    </form>
+                </div>
                 </div>
             </div>
-        </div>
-        <!-- Add Card Modal End -->
+            </div>
+            <!-- Add Card Modal End -->
+
     </div>
 </div>
 <!-- END MAIN CONTENT -->
@@ -1052,23 +1055,22 @@
 <script src="/js/typeahead.js"></script>
 
 <!-- Bootstrap Typeahead JS -->
-<script src="/js/typeahead.js"></script>
+<!--<script src="/js/typeahead.js"></script>
 <script>
   $(document).ready(function () {
-    var taskname = <%= JSON.stringify(taskNames || []) %>;
-    console.log("taskname:", taskname);
-
+    const taskname = <%- JSON.stringify(taskNames || []) %>;
     $('.typeahead[name="taskname"]').typeahead({
       source: taskname
     });
   });
-</script>
+</script> -->
+
 
 <!-- Kanban Drag/Drop AJAX -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         $('.kanban-wrap').on('sortupdate', function (event, ui) {
-            var cardId = ui.item.data('data-card-id');
+            var cardId = ui.item.data('card-id');
             var newStatus = ui.item.parent().prev('.kanban-header').find('.card-title').text().trim();
 
             $.ajax({
@@ -1085,5 +1087,5 @@
         });
     });
 </script>
-
+</body>
 </html>  

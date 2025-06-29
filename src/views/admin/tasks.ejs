@@ -1,18 +1,18 @@
-<!-- views/admin/tasks.ejs -->
 <!DOCTYPE html>
 <html lang="en">
   <%- include('../partials/head') %>
   <%- include('../partials/header') %>
 
+  <!-- MAIN CONTENT -->
   <div class="main">
     <div class="main-content board">
       <div class="row">
         <div class="col-12">
           <div class="box card-box">
 
-            <!-- Botão Assign Task -->
+            <!-- Botão: Assign Task -->
             <div class="icon-box bg-color-4">
-              <a class="create d-flex" href="#" data-toggle="modal" data-target="#assign">
+              <a class="create d-flex" href="#" data-bs-toggle="modal" data-bs-target="#assign">
                 <div class="icon bg-white">
                   <i class="bx bx-plus"></i>
                 </div>
@@ -22,9 +22,9 @@
               </a>
             </div>
 
-            <!-- Botão Create Task -->
+            <!-- Botão: Create Task -->
             <div class="icon-box bg-color-4">
-              <a class="create d-flex" href="#" data-toggle="modal" data-target="#add_project">
+              <a class="create d-flex" href="#" data-bs-toggle="modal" data-bs-target="#add_project">
                 <div class="icon bg-white">
                   <i class="bx bx-plus"></i>
                 </div>
@@ -38,14 +38,16 @@
         </div>
       </div>
 
+      <!-- ===== MODAIS ===== -->
+
       <!-- Modal: Create Task -->
-      <div id="add_project" class="modal custom-modal fade" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div id="add_project" class="modal custom-modal fade" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Create Task</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <span>&times;</span>
               </button>
             </div>
             <div class="modal-body">
@@ -66,8 +68,8 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label>Priority</label>
-                      <select class="form-control form-select" name="priority" required>
-                        <option selected>High</option>
+                      <select class="form-control" name="priority" required>
+                        <option>High</option>
                         <option>Medium</option>
                         <option>Low</option>
                       </select>
@@ -90,7 +92,7 @@
                 </div>
                 <div class="form-group">
                   <label>Description</label>
-                  <textarea rows="4" class="form-control" name="description" placeholder="Enter your message here" required></textarea>
+                  <textarea class="form-control" name="description" rows="4" required></textarea>
                 </div>
                 <div class="submit-section">
                   <button type="submit" class="btn btn-primary submit-btn">Save</button>
@@ -102,13 +104,13 @@
       </div>
 
       <!-- Modal: Assign Task -->
-      <div id="assign" class="modal custom-modal fade" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+      <div id="assign" class="modal custom-modal fade" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Assign Task</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <span>&times;</span>
               </button>
             </div>
             <div class="modal-body">
@@ -139,21 +141,25 @@
     </div>
   </div>
 
+  <!-- OVERLAY -->
   <div class="overlay"></div>
 
-  <!-- Scripts -->
-  <!-- Scripts -->
   <script src="/libs/jquery/jquery.min.js"></script>
-  <script src="/js/typeahead.js"></script>
-  <script>
-    $(document).ready(function () {
-        const usernames = <%- JSON.stringify(usernames || []) %>;
-        const tasknames = <%- JSON.stringify(tasknames || []) %>;
-        const projectnames = <%- JSON.stringify(projectnames || []) %>;
+  <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-        $('.typeahead[name="username"]').typeahead({ source: usernames });
-        $('.typeahead[name="taskname"]').typeahead({ source: tasknames });
-        $('.typeahead[name="project_name"]').typeahead({ source: projectnames });
-    });
-  </script>
+
+  <!-- SCRIPTS 
+  
+  <script>
+  $(document).ready(function () {
+    const usernames = <%- JSON.stringify(usernames || []) %>;
+    const tasknames = <%- JSON.stringify(tasknames || []) %>;
+    const projectnames = <%- JSON.stringify(projectnames || []) %>;
+
+    $('input[name="username"]').typeahead({ source: usernames });
+    $('input[name="taskname"]').typeahead({ source: tasknames });
+    $('input[name="project_name"]').typeahead({ source: projectnames });
+  });
+</script> -->
+
 </html>
