@@ -55,7 +55,7 @@
                                 <label>Client</label>
                                 <select name="client" class="form-control" required>
                                 <% clients.forEach(client => { %>
-                                    <option value="<%= client.id %>"><%= client.name %></option>
+                                    <option value="<%= client.name %>"><%= client.name %></option>
                                 <% }) %>
                                 </select>
                             </div>

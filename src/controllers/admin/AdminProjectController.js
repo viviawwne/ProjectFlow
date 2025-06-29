@@ -15,7 +15,7 @@ module.exports = {
             const [recentProjects] = await pool.query(`
                 SELECT id, project_title, department, description
                 FROM projects
-                ORDER BY created_at DESC
+                ORDER BY start_date DESC
                 LIMIT 5
             `);
 
@@ -64,7 +64,7 @@ module.exports = {
                 project_title,
                 department,
                 priority,
-                client_id,
+                client,
                 start_date,
                 end_date,
                 description,
@@ -75,7 +75,7 @@ module.exports = {
 
             const query = `
                 INSERT INTO projects (
-                    project_id, project_title, department, priority, client_id,
+                    project_id, project_title, department, priority, client,
                     start_date, end_date, description, attachment_file, work_status
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `;
@@ -85,7 +85,7 @@ module.exports = {
                 project_title,
                 department,
                 priority,
-                client_id,
+                client,
                 start_date,
                 end_date,
                 description,
@@ -101,3 +101,4 @@ module.exports = {
         }
     }
 };
+
