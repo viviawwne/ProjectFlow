@@ -13,17 +13,23 @@
           <!-- Header -->
           <div class="row mb-4">
             <div class="col-12">
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h2><%= card.title %></h2>
-                  <p class="text-muted">Projeto: <%= card.project_title %></p>
+              <div class="box">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h2 class="mb-1">
+                      <i class="bx bx-card text-primary"></i> <%= card.title %>
+                    </h2>
+                    <p class="text-muted mb-0">
+                      <i class="bx bx-folder"></i> Projeto: <%= card.project_title %>
+                    </p>
+                  </div>
+                  <a
+                    href="/admin/board/<%= card.project_id %>"
+                    class="btn btn-secondary"
+                  >
+                    <i class="bx bx-arrow-back"></i> Voltar ao Board
+                  </a>
                 </div>
-                <a
-                  href="/admin/board/<%= card.project_id %>"
-                  class="btn btn-secondary"
-                >
-                  Voltar ao Board
-                </a>
               </div>
             </div>
           </div>
@@ -31,49 +37,63 @@
           <!-- Card Info -->
           <div class="row mb-4">
             <div class="col-md-8">
-              <div class="card">
-                <div class="card-body">
-                  <h5>Informações do Card</h5>
-                  <p><strong>Título:</strong> <%= card.title %></p>
-                  <p>
-                    <strong>Descrição:</strong> <%= card.description || 'Sem
-                    descrição' %>
-                  </p>
-                  <p>
-                    <strong>Status:</strong>
-                    <span
-                      class="badge bg-<%= card.status === 'approved' ? 'success' : card.status === 'review' ? 'info' : card.status === 'progress' ? 'warning' : 'secondary' %>"
-                    >
-                      <%= card.status === 'approved' ? 'Aprovado' : card.status
-                      === 'review' ? 'Em Revisão' : card.status === 'progress' ?
-                      'Em Progresso' : 'A Fazer' %>
+              <div class="box">
+                <h5 class="mb-3">
+                  <i class="bx bx-info-circle text-primary"></i> Informações do Card
+                </h5>
+                
+                <div class="form-group">
+                  <label class="form-label fw-bold text-muted">
+                    <i class="bx bx-text"></i> Título:
+                  </label>
+                  <p class="mb-0 fs-15"><%= card.title %></p>
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label fw-bold text-muted">
+                    <i class="bx bx-detail"></i> Descrição:
+                  </label>
+                  <p class="mb-0 fs-15"><%= card.description || 'Sem descrição' %></p>
+                </div>
+                
+                <div class="form-group mb-0">
+                  <label class="form-label fw-bold text-muted">
+                    <i class="bx bx-flag"></i> Status:
+                  </label>
+                  <div>
+                    <span class="badge bg-<%= card.status === 'approved' ? 'success' : card.status === 'review' ? 'info' : card.status === 'progress' ? 'warning' : 'secondary' %> fs-6">
+                      <i class="bx bx-<%= card.status === 'approved' ? 'check-circle' : card.status === 'review' ? 'time' : card.status === 'progress' ? 'loader' : 'circle' %>"></i>
+                      <%= card.status === 'approved' ? 'Aprovado' : card.status === 'review' ? 'Em Revisão' : card.status === 'progress' ? 'Em Progresso' : card.status === 'todo' ? 'A Fazer' : 'Indefinido' %>
                     </span>
-                  </p>
+                  </div>
                 </div>
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card">
-                <div class="card-body">
-                  <h6>Ações</h6>
+              <div class="box">
+                <h6 class="mb-3">
+                  <i class="bx bx-cog text-primary"></i> Ações
+                </h6>
+                <div class="d-grid gap-2">
                   <button
-                    class="btn btn-primary btn-sm w-100 mb-2"
+                    class="btn btn-primary"
                     data-bs-toggle="modal"
                     data-bs-target="#createTaskModal"
                   >
-                    Nova Tarefa
+                    <i class="bx bx-plus"></i> Nova Tarefa
                   </button>
                   <button
-                    class="btn btn-warning btn-sm w-100 mb-2"
-                    onclick="editCard()"
+                    class="btn btn-warning"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editCardModal"
                   >
-                    Editar Card
+                    <i class="bx bx-edit"></i> Editar Card
                   </button>
                   <button
-                    class="btn btn-danger btn-sm w-100"
+                    class="btn btn-outline-danger"
                     onclick="deleteCard()"
                   >
-                    Excluir Card
+                    <i class="bx bx-trash"></i> Excluir Card
                   </button>
                 </div>
               </div>
@@ -83,63 +103,99 @@
           <!-- Tasks -->
           <div class="row">
             <div class="col-12">
-              <div class="card">
-                <div class="card-body">
-                  <h5>Tarefas do Card</h5>
+              <div class="box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="mb-0">
+                    <i class="bx bx-task text-primary"></i> Tarefas do Card
+                  </h5>
+                  <span class="badge bg-primary"><%= tasks.length %> tarefa<%= tasks.length !== 1 ? 's' : '' %></span>
+                </div>
 
-                  <% if (tasks.length === 0) { %>
-                  <p class="text-muted">Nenhuma tarefa criada ainda.</p>
-                  <% } else { %>
-                  <div class="table-responsive">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Nome</th>
-                          <th>Descrição</th>
-                          <th>Prioridade</th>
-                          <th>Status</th>
-                          <th>Ações</th>
-                        </tr>
-                      </thead>
-                      <tbody>
+                <% if (tasks.length === 0) { %>
+                <div class="text-center py-5">
+                  <div class="mb-3">
+                    <i class="bx bx-clipboard fs-1 text-muted d-block mb-2"></i>
+                  </div>
+                  <h6 class="text-muted mb-3">Nenhuma tarefa criada ainda</h6>
+                  <p class="text-muted fs-14 mb-4">
+                    Comece criando sua primeira tarefa para organizar o trabalho deste card.
+                  </p>
+                  <button
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createTaskModal"
+                  >
+                    <i class="bx bx-plus"></i> Criar Primeira Tarefa
+                  </button>
+                </div>
+                <% } else { %>
+                <div class="table-responsive">
+                  <table class="table table-hover table-striped">
+                    <thead class="table-light">
+                      <tr>
+                        <th class="fw-bold">
+                          <i class="bx bx-text text-primary"></i> Nome
+                        </th>
+                        <th class="fw-bold">
+                          <i class="bx bx-detail text-primary"></i> Descrição
+                        </th>
+                        <th class="fw-bold">
+                          <i class="bx bx-flag text-primary"></i> Prioridade
+                        </th>
+                        <th class="fw-bold">
+                          <i class="bx bx-check-circle text-primary"></i> Status
+                        </th>
+                        <th class="fw-bold text-center">
+                          <i class="bx bx-cog text-primary"></i> Ações
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
                         <% tasks.forEach(task => { %>
-                        <tr>
-                          <td><%= task.task_name %></td>
-                          <td><%= task.description || 'N/A' %></td>
+                        <tr class="align-middle">
+                          <td>
+                            <strong class="text-dark"><%= task.task_name %></strong>
+                          </td>
+                          <td>
+                            <span class="text-muted fs-14"><%= task.description || 'Sem descrição' %></span>
+                          </td>
                           <td>
                             <% if (task.priority) { %>
-                            <span
-                              class="badge bg-<%= task.priority === 'High' ? 'danger' : task.priority === 'Medium' ? 'warning' : 'info' %>"
-                            >
-                              <%= task.priority %>
+                            <span class="badge bg-<%= task.priority === 'High' ? 'danger' : task.priority === 'Medium' ? 'warning' : 'info' %> fs-6">
+                              <i class="bx bx-<%= task.priority === 'High' ? 'up-arrow' : task.priority === 'Medium' ? 'right-arrow' : 'down-arrow' %>"></i>
+                              <%= task.priority === 'High' ? 'Alta' : task.priority === 'Medium' ? 'Média' : 'Baixa' %>
                             </span>
                             <% } else { %>
-                            <span class="text-muted">N/A</span>
+                            <span class="badge bg-light text-dark fs-6">
+                              <i class="bx bx-minus"></i> N/A
+                            </span>
                             <% } %>
                           </td>
                           <td>
-                            <span
-                              class="badge bg-<%= task.status === 'completed' ? 'success' : 'secondary' %>"
-                            >
-                              <%= task.status === 'completed' ? 'Concluída' :
-                              'Pendente' %>
+                            <span class="badge bg-<%= task.status === 'completed' ? 'success' : 'secondary' %> fs-6">
+                              <i class="bx bx-<%= task.status === 'completed' ? 'check' : 'time' %>"></i>
+                              <%= task.status === 'completed' ? 'Concluída' : 'Pendente' %>
                             </span>
                           </td>
-                          <td>
-                            <button
-                              class="btn btn-sm btn-outline-primary"
-                              data-task-id="<%= task.id %>"
-                              onclick="editTask(this.dataset.taskId)"
-                            >
-                              Editar
-                            </button>
-                            <button
-                              class="btn btn-sm btn-outline-danger"
-                              data-task-id="<%= task.id %>"
-                              onclick="deleteTask(this.dataset.taskId)"
-                            >
-                              Excluir
-                            </button>
+                          <td class="text-center">
+                            <div class="btn-group" role="group">
+                              <button
+                                class="btn btn-sm btn-outline-primary"
+                                data-task-id="<%= task.id %>"
+                                onclick="editTask(this.dataset.taskId)"
+                                title="Editar tarefa"
+                              >
+                                <i class="bx bx-edit"></i>
+                              </button>
+                              <button
+                                class="btn btn-sm btn-outline-danger"
+                                data-task-id="<%= task.id %>"
+                                onclick="deleteTask(this.dataset.taskId)"
+                                title="Excluir tarefa"
+                              >
+                                <i class="bx bx-trash"></i>
+                              </button>
+                            </div>
                           </td>
                         </tr>
                         <% }) %>
@@ -156,11 +212,13 @@
     </div>
 
     <!-- Modal para criar tarefa -->
-    <div class="modal fade" id="createTaskModal" tabindex="-1">
+    <div class="modal fade custom-modal" id="createTaskModal" tabindex="-1">
       <div class="modal-dialog">
         <form action="/admin/tasks" method="POST" class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Nova Tarefa</h5>
+            <h5 class="modal-title">
+              <i class="bx bx-plus text-primary"></i> Nova Tarefa
+            </h5>
             <button
               type="button"
               class="btn-close"
@@ -168,27 +226,35 @@
             ></button>
           </div>
           <div class="modal-body">
-            <div class="mb-3">
-              <label class="form-label">Nome da Tarefa</label>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-text"></i> Nome da Tarefa
+              </label>
               <input
                 type="text"
                 name="taskName"
                 class="form-control"
+                placeholder="Digite o nome da tarefa"
                 required
               />
             </div>
-            <div class="mb-3">
-              <label class="form-label">Descrição</label>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-detail"></i> Descrição
+              </label>
               <textarea
                 name="description"
                 class="form-control"
                 rows="3"
+                placeholder="Descreva a tarefa (opcional)"
               ></textarea>
             </div>
-            <div class="mb-3">
-              <label class="form-label">Prioridade</label>
-              <select name="priority" class="form-control">
-                <option value="">Selecione</option>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-flag"></i> Prioridade
+              </label>
+              <select name="priority" class="form-control select">
+                <option value="">Selecione a prioridade</option>
                 <option value="High">Alta</option>
                 <option value="Medium">Média</option>
                 <option value="Low">Baixa</option>
@@ -196,15 +262,160 @@
             </div>
             <input type="hidden" name="cardId" value="<%= card.id %>" />
           </div>
-          <div class="modal-footer">
+          <div class="modal-footer d-flex justify-content-end gap-2">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-outline-secondary"
               data-bs-dismiss="modal"
             >
-              Cancelar
+              <i class="bx bx-x"></i> Cancelar
             </button>
-            <button type="submit" class="btn btn-primary">Criar Tarefa</button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bx bx-check"></i> Criar Tarefa
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para editar card -->
+    <div class="modal fade custom-modal" id="editCardModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="editCardForm" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bx bx-edit text-primary"></i> Editar Card
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-text"></i> Título
+              </label>
+              <input
+                type="text"
+                id="editCardTitle"
+                name="title"
+                class="form-control"
+                value="<%= card.title %>"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-detail"></i> Descrição
+              </label>
+              <textarea
+                id="editCardDescription"
+                name="description"
+                class="form-control"
+                rows="3"
+              ><%= card.description || '' %></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-flag"></i> Status
+              </label>
+              <select id="editCardStatus" name="status" class="form-control select">
+                <option value="todo" <%= card.status === 'todo' ? 'selected' : '' %>>A Fazer</option>
+                <option value="progress" <%= card.status === 'progress' ? 'selected' : '' %>>Em Progresso</option>
+                <option value="review" <%= card.status === 'review' ? 'selected' : '' %>>Em Revisão</option>
+                <option value="approved" <%= card.status === 'approved' ? 'selected' : '' %>>Aprovado</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              <i class="bx bx-x"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bx bx-check"></i> Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal para editar tarefa -->
+    <div class="modal fade custom-modal" id="editTaskModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form id="editTaskForm" class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">
+              <i class="bx bx-edit text-primary"></i> Editar Tarefa
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-text"></i> Nome da Tarefa
+              </label>
+              <input
+                type="text"
+                id="editTaskName"
+                name="taskName"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-detail"></i> Descrição
+              </label>
+              <textarea
+                id="editTaskDescription"
+                name="description"
+                class="form-control"
+                rows="3"
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-flag"></i> Prioridade
+              </label>
+              <select id="editTaskPriority" name="priority" class="form-control select">
+                <option value="">Selecione a prioridade</option>
+                <option value="High">Alta</option>
+                <option value="Medium">Média</option>
+                <option value="Low">Baixa</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-check-circle"></i> Status
+              </label>
+              <select id="editTaskStatus" name="status" class="form-control select">
+                <option value="pending">Pendente</option>
+                <option value="completed">Concluída</option>
+              </select>
+            </div>
+            <input type="hidden" id="editTaskId" />
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              data-bs-dismiss="modal"
+            >
+              <i class="bx bx-x"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bx bx-check"></i> Salvar Alterações
+            </button>
           </div>
         </form>
       </div>
@@ -213,30 +424,14 @@
     <div class="overlay"></div>
     <%- include('../partials/footer') %>
 
+    <!-- Script específico da página -->
     <script>
-      function editCard() {
-        // TODO: Implementar edição do card
-        alert("Funcionalidade de edição em desenvolvimento");
-      }
-
-      function deleteCard() {
-        if (confirm("Tem certeza que deseja excluir este card?")) {
-          // TODO: Implementar exclusão do card
-          alert("Funcionalidade de exclusão em desenvolvimento");
-        }
-      }
-
-      function editTask(taskId) {
-        // TODO: Implementar edição da tarefa
-        alert("Editar tarefa " + taskId);
-      }
-
-      function deleteTask(taskId) {
-        if (confirm("Tem certeza que deseja excluir esta tarefa?")) {
-          // TODO: Implementar exclusão da tarefa
-          alert("Excluir tarefa " + taskId);
-        }
-      }
+      // Dados do card para uso no JavaScript
+      window.CARD_DATA = {
+        id: "<%= card.id %>",
+        project_id: "<%= card.project_id %>"
+      };
     </script>
+    <script src="/js/pages/card-details.js"></script>
   </body>
 </html>

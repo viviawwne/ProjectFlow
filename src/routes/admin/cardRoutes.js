@@ -7,6 +7,9 @@ router.get("/:id", CardController.showCardDetails);
 
 router.post("/", CardController.createCard);
 
+// Editar card
+router.put("/:cardId", CardController.updateCard);
+
 router.post("/:cardId/assign-task", CardController.assignTaskToCard);
 
 router.patch("/:cardId/status", CardController.updateCardStatus);

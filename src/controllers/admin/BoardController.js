@@ -94,3 +94,57 @@ exports.renderBoardsList = async (req, res) => {
     res.status(500).send("Erro ao carregar projetos");
   }
 };
+
+// Buscar boards/projetos
+exports.searchBoards = async (req, res) => {
+  try {
+    const { q } = req.query; // parâmetro de busca
+
+    let query = `
+      SELECT 
+        p.*,
+        COUNT(c.id) as total_cards
+      FROM projects p
+      LEFT JOIN cards c ON p.id = c.project_id
+    `;
+
+    let params = [];
+
+    if (q && q.trim()) {
+      query += ` WHERE p.project_title LIKE ?`;
+      const searchTerm = `%${q.trim()}%`;
+      params = [searchTerm];
+    }
+
+    query += ` GROUP BY p.id ORDER BY p.id DESC`;
+
+    const [projects] = await pool.execute(query, params);
+
+    // Se for uma requisição AJAX, retorna JSON
+    if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+      return res.json({
+        success: true,
+        projects: projects,
+        searchTerm: q || "",
+      });
+    }
+
+    // Caso contrário, renderiza a página normalmente
+    res.render("admin/boards-list", {
+      projects,
+      pagetitle: "Board-Flow",
+      searchTerm: q || "",
+    });
+  } catch (error) {
+    console.error("Erro ao buscar projetos:", error);
+
+    if (req.headers["x-requested-with"] === "XMLHttpRequest") {
+      return res.status(500).json({
+        success: false,
+        error: "Erro ao buscar projetos",
+      });
+    }
+
+    res.status(500).send("Erro ao buscar projetos");
+  }
+};

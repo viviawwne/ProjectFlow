@@ -24,8 +24,6 @@ exports.getTasksPage = async (req, res) => {
   }
 };
 
-
-
 // Criar nova tarefa
 exports.createTask = async (req, res) => {
   try {
@@ -141,6 +139,73 @@ exports.getEditTaskPage = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Erro ao carregar tarefa');
+  }
+};
+
+// Atualizar tarefa de um card específico
+exports.updateCardTask = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const { taskName, description, priority, status } = req.body;
+
+    console.log('Atualizando tarefa:', { taskId, taskName, description, priority, status });
+
+    // Busca o card_id da tarefa para poder redirecionar
+    const [taskResult] = await pool.execute('SELECT card_id FROM tasks WHERE id = ?', [taskId]);
+    const cardId = taskResult[0]?.card_id;
+
+    await pool.execute(
+      `UPDATE tasks SET 
+       task_name = ?, 
+       description = ?, 
+       priority = ?, 
+       status = ? 
+       WHERE id = ?`,
+      [taskName, description, priority || null, status || 'pending', taskId]
+    );
+
+    // Retorna JSON para requisições AJAX
+    if (req.headers['content-type'] === 'application/json') {
+      res.json({ success: true, message: 'Tarefa atualizada com sucesso' });
+    } else {
+      res.redirect(`/admin/cards/${cardId}`);
+    }
+  } catch (err) {
+    console.error('Erro ao atualizar tarefa:', err);
+    if (req.headers['content-type'] === 'application/json') {
+      res.status(500).json({ success: false, message: 'Erro ao atualizar tarefa' });
+    } else {
+      res.status(500).send('Erro ao atualizar tarefa');
+    }
+  }
+};
+
+// Deletar tarefa de um card específico
+exports.deleteCardTask = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    
+    console.log('Deletando tarefa:', taskId);
+    
+    // Busca o card_id da tarefa para poder redirecionar
+    const [taskResult] = await pool.execute('SELECT card_id FROM tasks WHERE id = ?', [taskId]);
+    const cardId = taskResult[0]?.card_id;
+
+    await pool.execute('DELETE FROM tasks WHERE id = ?', [taskId]);
+    
+    // Retorna JSON para requisições AJAX
+    if (req.headers['content-type'] === 'application/json') {
+      res.json({ success: true, message: 'Tarefa deletada com sucesso' });
+    } else {
+      res.redirect(`/admin/cards/${cardId}`);
+    }
+  } catch (err) {
+    console.error('Erro ao deletar tarefa:', err);
+    if (req.headers['content-type'] === 'application/json') {
+      res.status(500).json({ success: false, message: 'Erro ao deletar tarefa' });
+    } else {
+      res.status(500).send('Erro ao deletar tarefa');
+    }
   }
 };
 

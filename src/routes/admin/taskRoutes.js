@@ -9,6 +9,10 @@ router.patch('/:taskId', TaskController.updateTask);
 router.delete('/:taskId', TaskController.deleteTask);
 router.get('/new', TaskController.getNewTaskPage);
 
+// Rotas específicas para tarefas de cards
+router.put('/:taskId/card', TaskController.updateCardTask);
+router.delete('/:taskId/card', TaskController.deleteCardTask);
+
 // Rotas adicionais (caso implementadas no controller futuramente)
 if (TaskController.assignTask) {
   router.patch('/:taskId/assign', TaskController.assignTask);

@@ -13,40 +13,87 @@
           <h2 class="mb-4">Board-Flow</h2>
           <p class="mb-4">Selecione um projeto para acessar seu board</p>
 
-          <div class="row">
-            <% if (projects.length === 0) { %>
-            <div class="col-12 text-center">
-              <p>Nenhum projeto encontrado.</p>
-              <a href="/admin/project/create" class="btn btn-primary"
-                >Criar Primeiro Projeto</a
-              >
+          <!-- Campo de busca -->
+          <div class="row mb-4">
+            <div class="col-lg-8 col-md-10">
+              <div class="box">
+                <form action="/admin/board/search" method="GET" class="d-flex gap-2">
+                  <input
+                    type="text"
+                    name="q"
+                    class="form-control"
+                    placeholder="Buscar por nome do projeto..."
+                    value="<%= typeof searchTerm !== 'undefined' ? searchTerm : '' %>"
+                    id="searchInput"
+                  />
+                  <button type="submit" class="btn btn-primary">
+                    <i class="bx bx-search"></i>
+                  </button>
+                  <% if (typeof searchTerm !== 'undefined' && searchTerm) { %>
+                  <a href="/admin/board" class="btn btn-outline-secondary">
+                    <i class="bx bx-x"></i>
+                  </a>
+                  <% } %>
+                </form>
+              </div>
             </div>
-            <% } else { %> <% projects.forEach(project => { %>
-            <div class="col-md-4 mb-3">
-              <div class="card h-100">
-                <div class="card-body">
-                  <h5 class="card-title"><%= project.project_title %></h5>
-                  <p class="card-text">
-                    <small class="text-muted"
-                      >ID: <%= project.project_id %></small
-                    ><br />
-                    <small class="text-muted"
-                      >Cliente: <%= project.client || 'N/A' %></small
-                    ><br />
-                    <small class="text-muted"
-                      >Cards: <%= project.total_cards %></small
-                    >
-                  </p>
-                  <a
-                    href="/admin/board/<%= project.id %>"
-                    class="btn btn-primary"
-                  >
-                    Abrir Board
+          </div>
+
+          <div class="row g-3">
+            <% if (projects.length === 0) { %>
+            <div class="col-12">
+              <div class="box text-center">
+                <div class="py-4">
+                  <i class="bx bx-folder-open fs-1 text-muted d-block mb-3"></i>
+                  <h5 class="text-muted">Nenhum projeto encontrado</h5>
+                  <% if (typeof searchTerm !== 'undefined' && searchTerm) { %>
+                    <p class="text-muted mb-3">
+                      Não encontramos projetos com "<%= searchTerm %>". Tente outro termo de busca.
+                    </p>
+                  <% } else { %>
+                    <p class="text-muted mb-3">
+                      Ainda não há projetos criados no sistema.
+                    </p>
+                  <% } %>
+                  <a href="/admin/project/create" class="btn btn-primary">
+                    <i class="bx bx-plus"></i> Criar Primeiro Projeto
                   </a>
                 </div>
               </div>
             </div>
-            <% }) %> <% } %>
+            <% } else { %> 
+            <% projects.forEach(project => { %>
+            <div class="col-lg-4 col-md-6">
+              <div class="box h-100">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <h5 class="mb-0"><%= project.project_title %></h5>
+                  <span class="badge bg-primary"><%= project.total_cards %></span>
+                </div>
+                
+                <div class="mb-3">
+                  <p class="text-muted mb-1 small">
+                    <i class="bx bx-hash text-primary"></i> 
+                    ID: <%= project.project_id %>
+                  </p>
+                  <p class="text-muted mb-1 small">
+                    <i class="bx bx-user text-primary"></i> 
+                    Cliente: <%= project.client || 'N/A' %>
+                  </p>
+                  <p class="text-muted mb-0 small">
+                    <i class="bx bx-layer text-primary"></i> 
+                    Cards: <%= project.total_cards %>
+                  </p>
+                </div>
+
+                <div class="d-grid">
+                  <a href="/admin/board/<%= project.id %>" class="btn btn-primary">
+                    <i class="bx bx-layout"></i> Abrir Board
+                  </a>
+                </div>
+              </div>
+            </div>
+            <% }) %> 
+            <% } %>
           </div>
         </div>
       </div>
@@ -54,5 +101,7 @@
 
     <div class="overlay"></div>
     <%- include('../partials/footer') %>
+
+    <script src="/js/pages/boards-list.js"></script>
   </body>
 </html>

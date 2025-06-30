@@ -60,6 +60,8 @@ exports.deleteCard = async (req, res) => {
   try {
     const { cardId } = req.params;
 
+    console.log('Deletando card:', cardId);
+
     // Remove associação das tarefas
     await pool.execute("UPDATE tasks SET card_id = NULL WHERE card_id = ?", [
       cardId,
@@ -68,10 +70,19 @@ exports.deleteCard = async (req, res) => {
     // Deleta o card
     await pool.execute("DELETE FROM cards WHERE id = ?", [cardId]);
 
-    res.redirect(req.get("Referrer") || "/admin/cards");
+    // Retorna JSON para requisições AJAX
+    if (req.headers['content-type'] === 'application/json' || req.headers.accept?.includes('application/json')) {
+      res.json({ success: true, message: 'Card deletado com sucesso' });
+    } else {
+      res.redirect(req.get("Referrer") || "/admin/cards");
+    }
   } catch (error) {
     console.error("Erro ao deletar card:", error);
-    res.status(500).send("Erro ao deletar card");
+    if (req.headers['content-type'] === 'application/json' || req.headers.accept?.includes('application/json')) {
+      res.status(500).json({ success: false, message: 'Erro ao deletar card' });
+    } else {
+      res.status(500).send("Erro ao deletar card");
+    }
   }
 };
 
@@ -106,5 +117,34 @@ exports.showCardDetails = async (req, res) => {
   } catch (error) {
     console.error("Erro ao carregar detalhes do card:", error);
     res.status(500).send("Erro ao carregar detalhes do card");
+  }
+};
+
+// Editar card
+exports.updateCard = async (req, res) => {
+  try {
+    const { cardId } = req.params;
+    const { title, description, status } = req.body;
+
+    console.log('Atualizando card:', { cardId, title, description, status });
+
+    await pool.execute(
+      "UPDATE cards SET title = ?, description = ?, status = ? WHERE id = ?",
+      [title, description, status, cardId]
+    );
+
+    // Retorna JSON para requisições AJAX
+    if (req.headers['content-type'] === 'application/json') {
+      res.json({ success: true, message: 'Card atualizado com sucesso' });
+    } else {
+      res.redirect(`/admin/cards/${cardId}`);
+    }
+  } catch (error) {
+    console.error("Erro ao editar card:", error);
+    if (req.headers['content-type'] === 'application/json') {
+      res.status(500).json({ success: false, message: 'Erro ao editar card' });
+    } else {
+      res.status(500).send("Erro ao editar card");
+    }
   }
 };

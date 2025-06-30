@@ -39,19 +39,7 @@
   </div>
 </div>
 
-<script>
-  document.getElementById("togglePassword")?.addEventListener("click", function () {
-    const passwordInput = document.getElementById("passwordInput");
-    const icon = this.querySelector("i");
-    if (passwordInput.type === "password") {
-      passwordInput.type = "text";
-      icon.classList.replace("fa-eye-slash", "fa-eye");
-    } else {
-      passwordInput.type = "password";
-      icon.classList.replace("fa-eye", "fa-eye-slash");
-    }
-  });
-</script>
+<script src="/js/pages/toggle-password.js"></script>
 
 <%- include('../partials/footer') %>
   

@@ -79,21 +79,6 @@
 </div>
 <!-- END MAIN CONTENT -->
 
-<script>
-    document.getElementById("togglePassword")?.addEventListener("click", function () {
-        const passwordInput = document.getElementById("passwordInput");
-        const toggleBtnIcon = this.querySelector("i");
-
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            toggleBtnIcon.classList.remove("fa-eye-slash");
-            toggleBtnIcon.classList.add("fa-eye");
-        } else {
-            passwordInput.type = "password";
-            toggleBtnIcon.classList.remove("fa-eye");
-            toggleBtnIcon.classList.add("fa-eye-slash");
-        }
-    });
-</script>
+<script src="/js/pages/toggle-password.js"></script>
 
 <%- include('../partials/footer') %>
