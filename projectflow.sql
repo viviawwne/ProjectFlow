@@ -1,11 +1,7 @@
--- phpMyAdmin SQL Dump
--- version 4.9.10
--- https://www.phpmyadmin.net/
 --
--- Host: localhost:8889
--- Generation Time: Jan 21, 2024 at 05:41 AM
--- Server version: 5.7.39
--- PHP Version: 5.6.40
+-- Database: `projectflow`
+--
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -14,19 +10,12 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `prozzila`
---
 CREATE DATABASE IF NOT EXISTS `projectflow` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `projectflow`;
-
--- --------------------------------------------------------
-
---
+-- ----------------------------------------------------------
 -- Table structure for table `admins`
 --
 USE projectflow;
-
 
 DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
@@ -67,6 +56,8 @@ CREATE TABLE `assignment` (
 --
 -- Table structure for table `cards`
 --
+
+DROP TABLE IF EXISTS `cards`;
 
 CREATE TABLE `cards` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -449,8 +440,7 @@ ALTER TABLE `assignment`
 --
 -- Indexes for table `cards`
 --
-ALTER TABLE `cards`
-  ADD PRIMARY KEY (`id`);
+
 
 --
 -- Indexes for table `client`
@@ -539,11 +529,6 @@ ALTER TABLE `projects`
   ADD KEY `fk_department_id` (`department_id`);
 
 --
--- Indexes for table `tasks`
---
-ALTER TABLE `tasks`
-  ADD PRIMARY KEY (`id`);
-
 --
 -- Indexes for table `team`
 --
@@ -700,13 +685,12 @@ ALTER TABLE `projects`
 
 
 
--- acrescentado
+-- acrescentado para ver o id dos projetos
 SELECT id, project_title FROM projects;
 
 ALTER TABLE cards ADD COLUMN project_id INT(255) DEFAULT NULL;
 
-ALTER TABLE cards
-  ADD CONSTRAINT fk_cards_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE SET NULL;
+
   
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
