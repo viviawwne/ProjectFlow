@@ -10,7 +10,7 @@ ProjectFlow é uma aplicação web desenvolvida em Node.js com Express e MySQL, 
 - Bootstrap (responsividade)
 
 ## Dependências
-  
+- npm install
 - npm install method-override
    
 ## 📂Estrutura do projeto:
