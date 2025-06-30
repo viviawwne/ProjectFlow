@@ -6,11 +6,8 @@
 -- Generation Time: Jan 21, 2024 at 05:41 AM
 -- Server version: 5.7.39
 -- PHP Version: 5.6.40
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-SHOW COLUMNS FROM tasks;
-
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,7 +27,6 @@ USE `projectflow`;
 --
 USE projectflow;
 
-DESCRIBE tasks;
 
 DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
@@ -72,7 +68,6 @@ CREATE TABLE `assignment` (
 -- Table structure for table `cards`
 --
 
-DROP TABLE IF EXISTS `cards`;
 CREATE TABLE `cards` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
@@ -381,16 +376,16 @@ CREATE TABLE `projects` (
 
 DROP TABLE IF EXISTS `tasks`;
 CREATE TABLE `tasks` (
-  `id` int(255) NOT NULL,
-  `project_name` varchar(255) DEFAULT NULL,
-  `card_id` int(255) DEFAULT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `task_name` varchar(255) DEFAULT NULL,
   `description` text NOT NULL,
   `priority` enum('High','Medium','Low') DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `due_date` date DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
-  `total_assigned` int(255) DEFAULT NULL
+  `card_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`card_id`) REFERENCES `cards`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -580,8 +575,8 @@ ALTER TABLE `assignment`
 --
 -- AUTO_INCREMENT for table `cards`
 --
-ALTER TABLE `cards`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+ALTER TABLE `cards` MODIFY `id` INT NOT NULL AUTO_INCREMENT;
+
 
 --
 -- AUTO_INCREMENT for table `client`
