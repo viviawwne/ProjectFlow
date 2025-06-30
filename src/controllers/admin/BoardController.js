@@ -72,3 +72,27 @@ exports.renderBoardByProject = async (req, res) => {
     res.status(500).send('Erro ao carregar o board do projeto');
   }
 };
+
+// Lista todos os projetos para o board-flow
+exports.renderBoardsList = async (req, res) => {
+  try {
+    const [projects] = await pool.execute(`
+      SELECT 
+        p.*,
+        COUNT(c.id) as total_cards
+      FROM projects p
+      LEFT JOIN cards c ON p.id = c.project_id
+      GROUP BY p.id
+      ORDER BY p.id DESC
+    `);
+
+    res.render('admin/boards-list', {
+      projects,
+      pagetitle: 'Board-Flow'
+    });
+
+  } catch (error) {
+    console.error('Erro ao carregar projetos:', error);
+    res.status(500).send('Erro ao carregar projetos');
+  }
+};

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <%- include('../partials/head') %>
+    <title><%= pagetitle %></title>
+</head>
+<body>
+    <%- include('../partials/header') %>
+
+    <div class="main">
+        <div class="main-content">
+            <div class="container">
+                <h2 class="mb-4">Board-Flow</h2>
+                <p class="mb-4">Selecione um projeto para acessar seu board</p>
+
+                <div class="row">
+                    <% if (projects.length === 0) { %>
+                        <div class="col-12 text-center">
+                            <p>Nenhum projeto encontrado.</p>
+                            <a href="/admin/project/create" class="btn btn-primary">Criar Primeiro Projeto</a>
+                        </div>
+                    <% } else { %>
+                        <% projects.forEach(project => { %>
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><%= project.project_title %></h5>
+                                        <p class="card-text">
+                                            <small class="text-muted">ID: <%= project.project_id %></small><br>
+                                            <small class="text-muted">Cliente: <%= project.client || 'N/A' %></small><br>
+                                            <small class="text-muted">Cards: <%= project.total_cards %></small>
+                                        </p>
+                                        <a href="/admin/board/<%= project.id %>" class="btn btn-primary">
+                                            Abrir Board
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay"></div>
+    <%- include('../partials/footer') %>
+</body>
+</html>

@@ -79,51 +79,38 @@ exports.deleteCard = async (req, res) => {
   }
 };
 
-
-exports.getCardDetails = async (req, res) => {
+// Mostrar informações de um card específico
+exports.showCardDetails = async (req, res) => {
   try {
-    const cardId = req.params.id;
+    const { id } = req.params;
 
-    // Buscar o card
-    const [cards] = await pool.execute('SELECT * FROM cards WHERE id = ?', [cardId]);
-    if (cards.length === 0) return res.status(404).send('Card não encontrado');
+    // Busca o card
+    const [cards] = await pool.execute(
+      'SELECT c.*, p.project_title FROM cards c LEFT JOIN projects p ON c.project_id = p.id WHERE c.id = ?',
+      [id]
+    );
+
+    if (cards.length === 0) {
+      return res.status(404).send('Card não encontrado');
+    }
+
     const card = cards[0];
 
-    // Buscar as tarefas vinculadas ao card
-    const [tasks] = await pool.execute('SELECT * FROM tasks WHERE card_id = ?', [cardId]);
+    // Busca as tarefas do card
+    const [tasks] = await pool.execute(
+      'SELECT * FROM tasks WHERE card_id = ? ORDER BY id DESC',
+      [id]
+    );
 
-    res.render('admin/cardDetails', {
-      pagetitle: `Detalhes do Card - ${card.title}`,
+    res.render('admin/card-details', {
       card,
       tasks,
+      pagetitle: `Card: ${card.title}`
     });
-  } catch (err) {
-    console.error('Erro ao carregar detalhes do card:', err);
-    res.status(500).send('Erro interno');
-  }
-};
 
-exports.getCardDetails = async (req, res) => {
-  const cardId = req.params.id;
-
-  try {
-    // Buscar card
-    const [cardRows] = await pool.execute('SELECT * FROM cards WHERE id = ?', [cardId]);
-    if (cardRows.length === 0) return res.status(404).send('Card não encontrado.');
-
-    const card = cardRows[0];
-
-    // Buscar tarefas associadas
-    const [taskRows] = await pool.execute('SELECT * FROM tasks WHERE card_id = ?', [cardId]);
-
-    res.render('admin/cardDetails', {
-      pagetitle: `Card: ${card.title}`,
-      card,
-      tasks: taskRows
-    });
   } catch (error) {
-    console.error('Erro ao buscar card:', error);
-    res.status(500).send('Erro interno.');
+    console.error('Erro ao carregar detalhes do card:', error);
+    res.status(500).send('Erro ao carregar detalhes do card');
   }
 };
 
