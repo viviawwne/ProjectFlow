@@ -1,165 +1,53 @@
 <!DOCTYPE html>
-<html lang="en">
-  <%- include('../partials/head') %>
-  <%- include('../partials/header') %>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title><%= pagetitle %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container my-4">
+    <h1 class="mb-4 text-center"><%= pagetitle %></h1>
 
-  <!-- MAIN CONTENT -->
-  <div class="main">
-    <div class="main-content board">
-      <div class="row">
-        <div class="col-12">
-          <div class="box card-box">
-
-            <!-- Botão: Assign Task -->
-            <div class="icon-box bg-color-4">
-              <a class="create d-flex" href="#" data-bs-toggle="modal" data-bs-target="#assign">
-                <div class="icon bg-white">
-                  <i class="bx bx-plus"></i>
-                </div>
-                <div class="content d-flex align-items-center">
-                  <h5 class="color-white">Assign New Task</h5>
-                </div>
-              </a>
-            </div>
-
-            <!-- Botão: Create Task -->
-            <div class="icon-box bg-color-4">
-              <a class="create d-flex" href="#" data-bs-toggle="modal" data-bs-target="#add_project">
-                <div class="icon bg-white">
-                  <i class="bx bx-plus"></i>
-                </div>
-                <div class="content d-flex align-items-center">
-                  <h5 class="color-white">Create New Task</h5>
-                </div>
-              </a>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- ===== MODAIS ===== -->
-
-      <!-- Modal: Create Task -->
-      <div id="add_project" class="modal custom-modal fade" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Create Task</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <span>&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form method="POST" action="/admin/tasks">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Task Name</label>
-                      <input class="form-control" name="task_name" type="text" required>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Project Name</label>
-                      <input type="text" class="form-control typeahead" name="project_name" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-sm-12">
-                    <div class="form-group">
-                      <label>Priority</label>
-                      <select class="form-control" name="priority" required>
-                        <option>High</option>
-                        <option>Medium</option>
-                        <option>Low</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Start Date</label>
-                      <input class="form-control" name="start_date" type="date" required>
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Due Date</label>
-                      <input class="form-control" name="due_date" type="date" required>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label>Description</label>
-                  <textarea class="form-control" name="description" rows="4" required></textarea>
-                </div>
-                <div class="submit-section">
-                  <button type="submit" class="btn btn-primary submit-btn">Save</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal: Assign Task -->
-      <div id="assign" class="modal custom-modal fade" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Assign Task</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                <span>&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form method="POST" action="/admin/taskassign">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Employee Name</label>
-                      <input type="text" class="form-control typeahead" name="username" autocomplete="off">
-                    </div>
-                  </div>
-                  <div class="col-sm-6">
-                    <div class="form-group">
-                      <label>Task Name</label>
-                      <input type="text" class="form-control typeahead" name="taskname" autocomplete="off">
-                    </div>
-                  </div>
-                </div>
-                <div class="submit-section">
-                  <button type="submit" class="btn btn-primary submit-btn">Save</button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <div class="mb-3 text-end">
+      <a href="/admin/tasks/new" class="btn btn-primary">+ Nova Tarefa</a>
     </div>
+
+    <% if (tasks.length === 0) { %>
+      <p class="text-muted text-center">Nenhuma tarefa encontrada.</p>
+    <% } else { %>
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>#</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Status</th>
+            <th>Criada em</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+            <tr>
+              <td><%= task.id %></td>
+              <td><%= task.task_name %></td>
+              <td><%= task.description || '-' %></td>
+              <td><%= task.status || '-' %></td>
+              <td><%= formatDate(task.created_at) %></td>
+              <td>
+                <a href="/admin/tasks/<%= task.id %>/edit" class="btn btn-sm btn-primary">Editar</a>
+                <form action="/admin/tasks/<%= task.id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('Deseja excluir esta tarefa?')">
+                  <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
   </div>
 
-  <!-- OVERLAY -->
-  <div class="overlay"></div>
-
-  <script src="/libs/jquery/jquery.min.js"></script>
-  <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-
-  <!-- SCRIPTS 
-  
-  <script>
-  $(document).ready(function () {
-    const usernames = <%- JSON.stringify(usernames || []) %>;
-    const tasknames = <%- JSON.stringify(tasknames || []) %>;
-    const projectnames = <%- JSON.stringify(projectnames || []) %>;
-
-    $('input[name="username"]').typeahead({ source: usernames });
-    $('input[name="taskname"]').typeahead({ source: tasknames });
-    $('input[name="project_name"]').typeahead({ source: projectnames });
-  });
-</script> -->
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

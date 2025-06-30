@@ -9,6 +9,7 @@
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+SHOW COLUMNS FROM tasks;
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -27,6 +28,9 @@ USE `projectflow`;
 --
 -- Table structure for table `admins`
 --
+USE projectflow;
+
+DESCRIBE tasks;
 
 DROP TABLE IF EXISTS `admins`;
 CREATE TABLE `admins` (
@@ -70,13 +74,14 @@ CREATE TABLE `assignment` (
 
 DROP TABLE IF EXISTS `cards`;
 CREATE TABLE `cards` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
   `start` date DEFAULT NULL,
   `due_date` date DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
   `priority` varchar(255) DEFAULT NULL,
-  `description` varchar(255) NOT NULL
+  `description` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -698,6 +703,16 @@ ALTER TABLE `projects`
   ADD CONSTRAINT `fk_department_id` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_manager_id` FOREIGN KEY (`manager_id`) REFERENCES `employees` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+
+
+-- acrescentado
+SELECT id, project_title FROM projects;
+
+ALTER TABLE cards ADD COLUMN project_id INT(255) DEFAULT NULL;
+
+ALTER TABLE cards
+  ADD CONSTRAINT fk_cards_project FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE SET NULL;
+  
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
