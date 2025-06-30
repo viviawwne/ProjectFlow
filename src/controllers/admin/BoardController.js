@@ -4,7 +4,7 @@ exports.renderBoardByProject = async (req, res) => {
   const projectId = req.params.projectId;
 
   try {
-    // Busca cards do projeto
+    // Busca todos os cards do projeto
     const [cards] = await pool.execute(
       'SELECT * FROM cards WHERE project_id = ?',
       [projectId]
@@ -12,7 +12,7 @@ exports.renderBoardByProject = async (req, res) => {
 
     const cardIds = cards.map(card => card.id);
 
-    // Se não tiver cards, evita erro na query
+    // Se não houver cards, evita erro e já renderiza
     if (cardIds.length === 0) {
       return res.render('admin/board', {
         todoCards: [],
@@ -25,31 +25,38 @@ exports.renderBoardByProject = async (req, res) => {
       });
     }
 
-    // Busca tarefas dos cards do projeto
+    // Busca tarefas associadas aos cards
+    const placeholders = cardIds.map(() => '?').join(',');
     const [tasks] = await pool.execute(
-      `SELECT * FROM tasks WHERE card_id IN (${cardIds.map(() => '?').join(',')})`,
+      `SELECT * FROM tasks WHERE card_id IN (${placeholders})`,
       cardIds
     );
 
-    // Monta cards com tarefas associadas
+    // Associa tarefas a seus respectivos cards
     const cardsWithTasks = cards.map(card => ({
       ...card,
       tasks: tasks.filter(task => task.card_id === card.id)
     }));
 
-    // Filtra cards por status
+    // Filtra os cards por status
     const todoCards = cardsWithTasks.filter(c => c.status === 'todo');
     const progressCards = cardsWithTasks.filter(c => c.status === 'progress');
     const reviewCards = cardsWithTasks.filter(c => c.status === 'review');
     const approvedCards = cardsWithTasks.filter(c => c.status === 'approved');
 
-    // Tarefas sem card (não atribuídas) no projeto (opcional)
+    // Busca tarefas não atribuídas a nenhum card, mas pertencentes ao projeto
     const [unassignedTasks] = await pool.execute(
-      'SELECT * FROM tasks WHERE card_id IS NULL AND project_name = (SELECT project_title FROM projects WHERE id = ?)',
+      `SELECT * FROM tasks 
+       WHERE card_id IS NULL 
+         AND EXISTS (
+           SELECT 1 FROM cards 
+           WHERE cards.id = tasks.card_id 
+             AND cards.project_id = ?
+         )`,
       [projectId]
     );
 
-    // Renderiza a view com todas as variáveis
+    // Renderiza a view
     res.render('admin/board', {
       todoCards,
       progressCards,
