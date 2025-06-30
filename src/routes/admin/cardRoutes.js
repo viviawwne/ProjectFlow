@@ -2,17 +2,13 @@ const express = require('express');
 const router = express.Router();
 const CardController = require('../../controllers/admin/CardController');
 
-// Criar Card
-router.post('/add', CardController.createCard); 
+router.post('/', CardController.createCard);
 
-// Atribuir tarefa a um card
-router.post('/cardassign', CardController.assignTaskToCard);
+router.post('/:cardId/assign-task', CardController.assignTaskToCard);
 
-// Atualizar status
-router.get('/card/update/:status/:id', CardController.updateCardStatusGet);
-router.post('/update-status', CardController.updateCardStatusPost);
+router.patch('/:cardId/status', CardController.updateCardStatus);
 
-// Excluir Card
-router.get('/card/delete/:id', CardController.deleteCard);
+router.delete('/:cardId', CardController.deleteCard);
+router.get('/:id', CardController.getCardDetails);
 
 module.exports = router;

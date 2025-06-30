@@ -1,53 +1,67 @@
 const { pool } = require('../../config/db');
 
-exports.renderBoard = async (req, res) => {
+exports.renderBoardByProject = async (req, res) => {
+  const projectId = req.params.projectId;
+
   try {
-    const [cards] = await pool.execute('SELECT * FROM cards');
-    const [tasks] = await pool.execute('SELECT * FROM tasks');
-    const [employees] = await pool.execute('SELECT * FROM employees');
+    // Busca cards do projeto
+    const [cards] = await pool.execute(
+      'SELECT * FROM cards WHERE project_id = ?',
+      [projectId]
+    );
 
-    // Junta tarefas por card
-    const cardsWithTasks = cards.map(card => {
-      const relatedTasks = tasks.filter(task => task.card_id === card.id);
-      return { ...card, tasks: relatedTasks };
-    });
+    const cardIds = cards.map(card => card.id);
 
-    // Filtragem por status
+    // Se não tiver cards, evita erro na query
+    if (cardIds.length === 0) {
+      return res.render('admin/board', {
+        todoCards: [],
+        progressCards: [],
+        reviewCards: [],
+        approvedCards: [],
+        unassignedTasks: [],
+        pagetitle: `Board do Projeto ${projectId}`,
+        projectId
+      });
+    }
+
+    // Busca tarefas dos cards do projeto
+    const [tasks] = await pool.execute(
+      `SELECT * FROM tasks WHERE card_id IN (${cardIds.map(() => '?').join(',')})`,
+      cardIds
+    );
+
+    // Monta cards com tarefas associadas
+    const cardsWithTasks = cards.map(card => ({
+      ...card,
+      tasks: tasks.filter(task => task.card_id === card.id)
+    }));
+
+    // Filtra cards por status
     const todoCards = cardsWithTasks.filter(c => c.status === 'todo');
     const progressCards = cardsWithTasks.filter(c => c.status === 'progress');
     const reviewCards = cardsWithTasks.filter(c => c.status === 'review');
     const approvedCards = cardsWithTasks.filter(c => c.status === 'approved');
 
-    // Consulta de tarefas atribuídas (com nomes)
-    const [assignmentQuery] = await pool.execute(`
-    SELECT a.id, a.task_id, t.task_name
-    FROM assignment a
-    JOIN tasks t ON a.task_id = t.id
-    `);
+    // Tarefas sem card (não atribuídas) no projeto (opcional)
+    const [unassignedTasks] = await pool.execute(
+      'SELECT * FROM tasks WHERE card_id IS NULL AND project_name = (SELECT project_title FROM projects WHERE id = ?)',
+      [projectId]
+    );
 
-    const assignmentData = assignmentQuery.map(row => ({
-    id: row.id,
-    task_id: row.task_id,
-    task_name: row.task_name
-    }));
-
-
-    // ID do usuário logado (admin ou user)
-    const employeeId = req.session?.admin?.id || req.session?.user?.id || null;
-
+    // Renderiza a view com todas as variáveis
     res.render('admin/board', {
       todoCards,
       progressCards,
       reviewCards,
       approvedCards,
-      tasks,
-      employees,
-      taskNames: assignmentData.map(a => a.task_name),
-      employee_id: employeeId
+      unassignedTasks,
+      pagetitle: `Board do Projeto ${projectId}`,
+      projectId
     });
 
   } catch (error) {
-    console.error('❌ Erro ao carregar o board:', error);
-    res.status(500).send('Erro ao carregar o board');
+    console.error('Erro ao carregar o board do projeto:', error);
+    res.status(500).send('Erro ao carregar o board do projeto');
   }
 };

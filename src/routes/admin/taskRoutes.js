@@ -1,31 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
-const path = require('path');
-const taskController = require('../../controllers/admin/TaskController');
+const TaskController = require('../../controllers/admin/TaskController');
 
-// ✅ Corrigido: caminho correto para a pasta "public/images/work"
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../../../public/images/work'));
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  }
-});
-const upload = multer({ storage });
+// Rotas principais de tarefas
+router.get('/', TaskController.getTasksPage);
+router.post('/', TaskController.createTask);
+router.patch('/:taskId', TaskController.updateTask);
+router.delete('/:taskId', TaskController.deleteTask);
+router.get('/new', TaskController.getNewTaskPage);
 
-// ✅ Rotas
-router.get('/', taskController.getTasksPage);
-router.post('/', taskController.createTask);
-router.post('/taskassign', taskController.assignTask);
-router.post('/update_tasks', taskController.updateTasks);
+// Rotas adicionais (caso implementadas no controller futuramente)
+if (TaskController.assignTask) {
+  router.patch('/:taskId/assign', TaskController.assignTask);
+}
 
-// ✅ Rota de upload de conteúdo da tarefa
-router.post('/task-content', upload.single('attachment_file'), taskController.handleTaskContent);
-
-// ✅ Rota para atribuir tarefa a um card
-router.post('/complete-task', taskController.handleTaskCompletion);
-
+if (TaskController.completeTask) {
+  router.patch('/:taskId/complete', TaskController.completeTask);
+}
 
 module.exports = router;

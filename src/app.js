@@ -37,6 +37,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));  
 app.use(express.static(path.join(__dirname, 'public')));
 
+// =================== // Ativa suporte a métodos HTTP como DELETE e PUT via formulários HTML usando o parâmetro _method ===================   
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
 // =================== ROTAS ===================    
 
 // Importação de rotas (mantida a estrutura original)
