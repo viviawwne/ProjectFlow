@@ -6,7 +6,7 @@ const AdminAuthController = require('../../controllers/admin/AdminAuthController
 const AdminDashboardController = require('../../controllers/admin/AdminDashboardController');
 
 // Rota inicial de autenticação (login ou registro)
-router.get('/', AdminAuthController.renderOptions);
+router.get('/', AdminAuthController.renderOptions);;
 
 // Dashboard real, após login
 router.get('/dashboard', AdminDashboardController.dashboard);

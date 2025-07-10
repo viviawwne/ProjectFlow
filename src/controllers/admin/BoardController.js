@@ -1,78 +1,77 @@
 const { pool } = require("../../config/db");
 
+// Renderiza o board de um projeto específico
 exports.renderBoardByProject = async (req, res) => {
   const projectId = req.params.projectId;
 
   try {
+    // Busca o nome do projeto
+    const [[project]] = await pool.execute(
+      'SELECT project_title FROM projects WHERE id = ?',
+      [projectId]
+    );
+
+    const projectName = project?.project_title || `Projeto ${projectId}`;
+
     // Busca todos os cards do projeto
     const [cards] = await pool.execute(
       "SELECT * FROM cards WHERE project_id = ?",
       [projectId]
     );
 
-    const cardIds = cards.map((card) => card.id);
+    let cardsWithTasks = [];
+    let todoCards = [], progressCards = [], reviewCards = [], approvedCards = [];
 
-    // Se não houver cards, evita erro e já renderiza
-    if (cardIds.length === 0) {
-      return res.render("admin/board", {
-        todoCards: [],
-        progressCards: [],
-        reviewCards: [],
-        approvedCards: [],
-        unassignedTasks: [],
-        pagetitle: `Board do Projeto ${projectId}`,
-        projectId,
-      });
+    if (cards.length > 0) {
+      const cardIds = cards.map(card => card.id);
+      const placeholders = cardIds.map(() => '?').join(',');
+
+      // Busca tarefas associadas aos cards
+      const [tasks] = await pool.execute(
+        `SELECT * FROM tasks WHERE card_id IN (${placeholders})`,
+        cardIds
+      );
+
+      // Associa tarefas aos seus respectivos cards
+      cardsWithTasks = cards.map(card => ({
+        ...card,
+        tasks: tasks.filter(task => task.card_id === card.id)
+      }));
+
+      // Separa os cards por status
+      todoCards = cardsWithTasks.filter(c => c.status === 'todo');
+      progressCards = cardsWithTasks.filter(c => c.status === 'progress');
+      reviewCards = cardsWithTasks.filter(c => c.status === 'review');
+      approvedCards = cardsWithTasks.filter(c => c.status === 'approved');
     }
 
-    // Busca tarefas associadas aos cards
-    const placeholders = cardIds.map(() => "?").join(",");
-    const [tasks] = await pool.execute(
-      `SELECT * FROM tasks WHERE card_id IN (${placeholders})`,
-      cardIds
-    );
-
-    // Associa tarefas a seus respectivos cards
-    const cardsWithTasks = cards.map((card) => ({
-      ...card,
-      tasks: tasks.filter((task) => task.card_id === card.id),
-    }));
-
-    // Filtra os cards por status
-    const todoCards = cardsWithTasks.filter((c) => c.status === "todo");
-    const progressCards = cardsWithTasks.filter((c) => c.status === "progress");
-    const reviewCards = cardsWithTasks.filter((c) => c.status === "review");
-    const approvedCards = cardsWithTasks.filter((c) => c.status === "approved");
-
-    // Busca tarefas não atribuídas a nenhum card, mas pertencentes ao projeto
+    // Busca tarefas que pertencem ao projeto, mas não estão atribuídas a nenhum card
     const [unassignedTasks] = await pool.execute(
       `SELECT * FROM tasks 
        WHERE card_id IS NULL 
-         AND EXISTS (
-           SELECT 1 FROM cards 
-           WHERE cards.id = tasks.card_id 
-             AND cards.project_id = ?
-         )`,
+       AND project_id = ?`,
       [projectId]
     );
 
-    // Renderiza a view
-    res.render("admin/board", {
+    // Renderiza o board
+    res.render('admin/board', {
+      projectId,
+      projectName,
+      pagetitle: `Board-Flow: ${projectName}`,
       todoCards,
       progressCards,
       reviewCards,
       approvedCards,
-      unassignedTasks,
-      pagetitle: `Board do Projeto ${projectId}`,
-      projectId,
+      unassignedTasks
     });
+
   } catch (error) {
-    console.error("Erro ao carregar o board do projeto:", error);
-    res.status(500).send("Erro ao carregar o board do projeto");
+    console.error('Erro ao carregar o board do projeto:', error);
+    res.status(500).send('Erro ao carregar o board do projeto');
   }
 };
 
-// Lista todos os projetos para o board-flow
+// Lista todos os projetos com contagem de cards
 exports.renderBoardsList = async (req, res) => {
   try {
     const [projects] = await pool.execute(`
@@ -87,18 +86,19 @@ exports.renderBoardsList = async (req, res) => {
 
     res.render("admin/boards-list", {
       projects,
-      pagetitle: "Board-Flow",
+      pagetitle: "Board-Flow"
     });
+
   } catch (error) {
     console.error("Erro ao carregar projetos:", error);
     res.status(500).send("Erro ao carregar projetos");
   }
 };
 
-// Buscar boards/projetos
+// Busca de projetos (com AJAX e EJS fallback)
 exports.searchBoards = async (req, res) => {
   try {
-    const { q } = req.query; // parâmetro de busca
+    const { q } = req.query;
 
     let query = `
       SELECT 
@@ -107,44 +107,33 @@ exports.searchBoards = async (req, res) => {
       FROM projects p
       LEFT JOIN cards c ON p.id = c.project_id
     `;
-
-    let params = [];
+    const params = [];
 
     if (q && q.trim()) {
       query += ` WHERE p.project_title LIKE ?`;
-      const searchTerm = `%${q.trim()}%`;
-      params = [searchTerm];
+      params.push(`%${q.trim()}%`);
     }
 
     query += ` GROUP BY p.id ORDER BY p.id DESC`;
 
     const [projects] = await pool.execute(query, params);
 
-    // Se for uma requisição AJAX, retorna JSON
     if (req.headers["x-requested-with"] === "XMLHttpRequest") {
       return res.json({
         success: true,
-        projects: projects,
-        searchTerm: q || "",
+        projects,
+        searchTerm: q || ""
       });
     }
 
-    // Caso contrário, renderiza a página normalmente
     res.render("admin/boards-list", {
       projects,
       pagetitle: "Board-Flow",
-      searchTerm: q || "",
+      searchTerm: q || ""
     });
+
   } catch (error) {
-    console.error("Erro ao buscar projetos:", error);
-
-    if (req.headers["x-requested-with"] === "XMLHttpRequest") {
-      return res.status(500).json({
-        success: false,
-        error: "Erro ao buscar projetos",
-      });
-    }
-
-    res.status(500).send("Erro ao buscar projetos");
+    console.error('Erro ao buscar projetos:', error);
+    res.status(500).send('Erro ao buscar projetos');
   }
 };

@@ -1,5 +1,5 @@
 const express = require('express');
-const path = require('path');
+const path = require('path');   
 const dotenv = require('dotenv');
 const session = require('express-session');
 
@@ -67,6 +67,8 @@ app.use('/admin/cards', cardRoutes);
 const boardRoutes = require('./routes/admin/boardRoutes');
 app.use('/admin/board', boardRoutes);
 
+const documentationRoutes = require('./routes/admin/documentationRoutes');
+app.use('/admin/documentation', documentationRoutes);
 
 
 // Aplicação de Rotas (mantida igual)
@@ -79,6 +81,10 @@ app.use('/admin/project', projectRoutes);
 app.use('/admin/project', projectListRoutes);
 app.use('/admin/project', deleteProjectRoutes);
 app.use('/admin/project-details', projectDetailsRoutes);
+
+// Rotas de perfil do usuário 
+const userProfileRoutes = require('./routes/admin/userProfileRoutes');
+app.use('/admin', userProfileRoutes);
 
 // Dashboard principal (mantido igual)
 const adminProjectController = require('./controllers/admin/AdminProjectController');

@@ -1,61 +1,98 @@
 <%- include('../partials/head') %>
 <%- include('../partials/header', { title: pagetitle }) %>
 
-    <!-- MAIN CONTENT -->
-    <div class="main">
-        <div class="main-content dashboard">
-            <div class="row">
-                
-                <!-- Total Projects Card -->
-                <div class="col-6 col-xl-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-body d-flex pb-0">
-                            <div class="me-auto">
-                                <h5 class="box-title">Total de Projetos</h5>
-                                <div class="d-flex align-items-center">
-                                    <h4 class="mb-0 font-wb fs-30 mt-23"><%= totalProjects %></h4>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Task Done Card -->
-                <div class="col-6 col-xl-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-body d-flex pb-0">
-                            <div class="me-auto">
-                                <h5 class="box-title mb-36">Total de Tarefas Finalizadas</h5>
-                                <div class="progress skill-progress mb-10" style="height:10px;">
-                                    <div class="progress-bar bg-primary progress-animated"
-                                         style="width: '<%= percentCompleted %>%'; height:10px;" role="progressbar">
-                                        <span class="sr-only"><%= percentCompleted %>% Complete</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <h4 class="numb font-wb fs-30"><%= totalCompleted %></h4>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Total Clients Card -->
-                <div class="col-6 col-xl-12 col-sm-12">
-                    <div class="box">
-                        <div class="box-body d-flex pb-0">
-                            <div class="me-auto">
-                                <h4 class="numb fs-30 font-wb"><%= totalClients %></h4>
-                                <h5 class="card-title fs-18 font-w400">Total de Clientes</h5>
-                            </div>
-                            <div id="total-revenue-chart"></div>
-                        </div>
-                    </div>
-                </div>
-
+<!-- MAIN CONTENT -->
+<div class="main">
+  <div class="main-content dashboard">
+    <div class="row">
+      <!-- Total Projects Card -->
+      <div class="col-6 col-xl-12 col-sm-12">
+        <div class="box">
+          <div class="box-body d-flex pb-0">
+            <div class="me-auto">
+              <h5 class="box-title">Total de Projetos</h5>
+              <h4 class="mb-0 font-wb fs-30 mt-23"><%= totalProjects %></h4>
             </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Total Task Done Card -->
+      <div class="col-6 col-xl-12 col-sm-12">
+        <div class="box">
+          <div class="box-body d-flex pb-0">
+            <div class="me-auto w-100">
+              <h5 class="box-title mb-36">Total de Tarefas Finalizadas</h5>
+              <div class="progress skill-progress mb-10" style="height:10px;">
+                <div class="progress-bar bg-primary progress-animated"
+                  style="width: <%= percentCompleted %>%; height:10px;" role="progressbar">
+                  <span class="sr-only"><%= percentCompleted %>% Concluído</span>
+                </div>
+              </div>
+            </div>
+            <h4 class="numb font-wb fs-30"><%= totalCompleted %></h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- Total Clients Card -->
+      <div class="col-6 col-xl-12 col-sm-12">
+        <div class="box">
+          <div class="box-body d-flex pb-0">
+            <div class="me-auto">
+              <h4 class="numb fs-30 font-wb"><%= totalClients %></h4>
+              <h5 class="card-title fs-18 font-w400">Total de Clientes</h5>
+            </div>
+            <!-- (opcional) espaço para gráfico futuro -->
+          </div>
+        </div>
+      </div>
+
+    <!-- TASK STATUS CHART -->
+    <div class="col-12 mt-4">
+      <div class="box">
+        <div class="box-header">
+          <h4 class="box-title">Distribuição das Tarefas por Status</h4>
+        </div>
+        <div class="box-body" style="max-width:320px; margin:auto;">
+          <canvas id="taskStatusChart" width="260" height="180"></canvas>
+        </div>
+      </div>
     </div>
-    <!-- END MAIN CONTENT -->
 
-    <div class="overlay"></div>
+    </div>
+  </div>
+</div>
+<!-- END MAIN CONTENT -->
 
-    <%- include('../partials/footer') %>
+<div class="overlay"></div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('taskStatusChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Pendente', 'Em Andamento', 'Concluída'],
+      datasets: [{
+        label: 'Tarefas',
+        data: [5,10,15], // Exemplo de dados
+        backgroundColor: ['#f44336', '#ff9800', '#4caf50'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: false,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,12 +1,10 @@
 <!-- views/admin/client-details.ejs -->
 <!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <%- include('../partials/head') %>
+<html lang="en">
+  <head>
     <title>Detalhes do Cliente</title>
-</head>
+  </head>
 <body>
-    <%- include('partials/header') %>
 
 <div class="main">
     <div class="main-content client project">
@@ -37,7 +35,7 @@
                 <div class="box user-pro-list overflow-hidden mb-30 text-center">
                     <div class="box-body">
                         <% if (client.image) { %>
-                            <img class="rounded-circle" src="/images/client/<%= client.image %>" width="100" height="100" alt="Client Logo">
+                            <img class="rounded-circle" src="/public/images/client/<%= client.image %>" width="100" height="100" alt="Client Logo">
                         <% } else { %>
                             <div class="rounded-circle bg-secondary text-white p-4">No Logo</div>
                         <% } %>

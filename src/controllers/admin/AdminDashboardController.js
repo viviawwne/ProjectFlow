@@ -9,18 +9,19 @@ module.exports = {
                 return res.redirect('/admin/login');
             }
 
-            // Usar db.pool.execute ao invés de db.execute
-            const [totalProjectsRows] = await db.pool.execute('SELECT COUNT(*) as count FROM projects');
-            const [totalCompletedRows] = await db.pool.execute("SELECT COUNT(*) as count FROM projects WHERE work_status = 'Completed'");
-            const [totalClientsRows] = await db.pool.execute('SELECT COUNT(*) as count FROM client');
-
-            const totalProjects = totalProjectsRows[0].count;
-            const totalCompleted = totalCompletedRows[0].count;
-            const totalClients = totalClientsRows[0].count;
+            // Métricas principais
+            const [[{ count: totalProjects }]] = await db.pool.execute('SELECT COUNT(*) as count FROM projects');
+            const [[{ count: totalCompleted }]] = await db.pool.execute("SELECT COUNT(*) as count FROM projects WHERE work_status = 'Completed'");
+            const [[{ count: totalClients }]] = await db.pool.execute('SELECT COUNT(*) as count FROM client');
 
             const percentCompleted = totalProjects > 0 ? Math.round((totalCompleted / totalProjects) * 100) : 0;
-            const remainingTasks = totalProjects - totalCompleted;
 
+            // Contagem de tarefas por status
+            const [[{ count: countPendingTasks }]] = await db.pool.execute("SELECT COUNT(*) as count FROM tasks WHERE status = 'Pending'");
+            const [[{ count: countInProgressTasks }]] = await db.pool.execute("SELECT COUNT(*) as count FROM tasks WHERE status = 'In Progress'");
+            const [[{ count: countCompletedTasks }]] = await db.pool.execute("SELECT COUNT(*) as count FROM tasks WHERE status = 'Completed'");
+
+            // Dados para gráfico mensal (projetos concluídos e em andamento)
             const [completedByMonth] = await db.pool.execute(`
                 SELECT MONTH(start_date) AS month, COUNT(*) AS count_completed 
                 FROM projects 
@@ -40,40 +41,51 @@ module.exports = {
             const completedData = Array(12).fill(0);
             const inProgressData = Array(12).fill(0);
 
-            completedByMonth.forEach(row => completedData[row.month - 1] = row.count_completed);
-            inProgressByMonth.forEach(row => inProgressData[row.month - 1] = row.count_in_progress);
+            completedByMonth.forEach(row => {
+                if (row.month >= 1 && row.month <= 12) {
+                    completedData[row.month - 1] = row.count_completed;
+                }
+            });
+
+            inProgressByMonth.forEach(row => {
+                if (row.month >= 1 && row.month <= 12) {
+                    inProgressData[row.month - 1] = row.count_in_progress;
+                }
+            });
 
             const chartData = {
                 completed: completedData,
                 in_progress: inProgressData
             };
 
-            // Salvar dados em JSON
+            // Salvar como JSON (pode ser usado em gráficos futuros)
             try {
                 const jsonPath = path.join(__dirname, '../../public/js/pages/data.json');
                 await fs.writeFile(jsonPath, JSON.stringify(chartData, null, 2));
             } catch (fileError) {
-                console.warn('Erro ao salvar arquivo JSON:', fileError.message);
+                console.warn('⚠️ Erro ao salvar JSON de gráfico:', fileError.message);
             }
 
-            // Renderizar com os dados reais
+            // Renderização da dashboard com dados
             res.render('admin/dashboard', {
                 pagetitle: 'Bem-Vindo ao ProjectFlow',
                 totalProjects,
                 totalCompleted,
                 percentCompleted,
-                remainingTasks,
                 totalClients,
+                countPendingTasks,
+                countInProgressTasks,
+                countCompletedTasks,
                 completedData,
                 inProgressData,
                 user: req.session.user
             });
-            
+
         } catch (err) {
-            console.error('Dashboard error:', err);
+            console.error('❌ Erro no dashboard:', err);
             res.status(500).json({
-                error: 'Internal Server Error',
-                message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
+                error: 'Erro Interno no Servidor',
+                message: process.env.NODE_ENV === 'development' ? err.message : 'Algo deu errado'
             });
         }
     }

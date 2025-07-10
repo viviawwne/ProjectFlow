@@ -1,0 +1,151 @@
+<%- include('../partials/head') %>
+<%- include('../partials/header', { title: 'Perfil do Usuário', admin: userProfile }) %>
+
+<div class="main">
+  <div class="main-content user">
+    <div class="row">
+      <div class="col-9 col-xl-12">
+        <div class="box">
+          <div class="box-body">
+            <div class="table-responsive">
+              <table class="table table-vcenter text-nowrap table-bordered">
+                <thead>
+                  <tr class="top">
+                    <th>No</th>
+                    <th>Task</th>
+                    <th>Priority</th>
+                    <th>Start Date</th>
+                    <th>Deadline</th>
+                    <th>Work Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% tasks.forEach((task) => { %>
+                    <tr>
+                      <td class="text-center"><%= task.id %></td>
+                      <td><%= task.task_name %></td>
+                      <td><span class="badge badge-danger-light"><%= task.priority %></span></td>
+                      <td><%= task.start_date ? new Date(task.start_date).toISOString().slice(0, 10) : '-' %></td>
+                      <td><%= task.due_date ? new Date(task.due_date).toISOString().slice(0, 10) : '-' %></td>
+                      <td><span class="badge badge-warning"><%= task.status %></span></td>
+                      <td>
+                        <a href="/admin/tasks/delete/<%= task.id %>" class="btn btn-danger submit-btn">Delete</a>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-3 col-xl-12">
+        <div class="box user-pro-list">
+          <div class="box-body text-center">
+            <img style="width: 100px; border-radius: 10%;" src="/images/profile/<%= userProfile.picture %>" alt="">
+            <h5 class="mt-3"><%= userProfile.name %></h5>
+            <h6 class="text-muted"><%= userProfile.email %></h6>
+            <div class="btn-list text-center mt-3">
+              <a href="#" class="btn btn-light"><i class='bx bxs-envelope'></i></a>
+              <a href="#" class="btn btn-light"><i class='bx bxs-phone-call'></i></a>
+              <a href="#" class="btn btn-light"><i class='bx bxs-error-circle'></i></a>
+              <a href="/admin/profile/edit/<%= userProfile.id %>" class="btn btn-light"><i class='bx bxs-message-alt-edit'></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="box left-dot pt-4 mb-30">
+          <div class="box-header border-0">
+            <div class="box-title fs-20 font-w600">Basic Info</div>
+          </div>
+          <div class="box-body user-profile">
+            <div class="table-responsive">
+              <table class="table mb-0 mw-100 color-span">
+                <tbody>
+                  <tr>
+                    <td>Employee ID</td><td>:</td><td>#365900</td>
+                  </tr>
+                  <tr>
+                    <td>First Name</td><td>:</td><td>Viviane</td>
+                  </tr>
+                  <tr>
+                    <td>Last Name</td><td>:</td><td>Amorim</td>
+                  </tr>
+                  <tr>
+                    <td>About</td><td>:</td><td>descrição</td>
+                  </tr>
+                  <tr>
+                    <td>Phone Number</td><td>:</td><td>+55 92 665444466</td>
+                  </tr>
+                  <tr>
+                    <td>Address</td><td>:</td><td>Active</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="box left-dot">
+          <div class="box-header border-0">
+            <div class="box-title fs-20 font-w600">Statistics</div>
+          </div>
+          <div class="box-body pt-10">
+            <div class="d-flex justify-content-between mt-10">
+              <div class="progress-cicle">
+                <div class="chart-circle chart-circle-xl" data-value="0.45" data-thickness="5" data-color="#E6154E">
+                  <div class="chart-circle-value">45%</div>
+                </div>
+                <div class="title-progress fs-15 font-w600 mt-10">Task</div>
+              </div>
+              <div class="progress-cicle">
+                <div class="chart-circle chart-circle-xl" data-value="0.55" data-thickness="5" data-color="#3C21F7">
+                  <div class="chart-circle-value">55%</div>
+                </div>
+                <div class="title-progress fs-15 font-w600 mt-10">Projects</div>
+              </div>
+              <div class="progress-cicle">
+                <div class="chart-circle chart-circle-xl" data-value="0.75" data-thickness="5" data-color="#E58911">
+                  <div class="chart-circle-value">75%</div>
+                </div>
+                <div class="title-progress fs-15 font-w600 mt-10">Performance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="overlay"></div>
+
+<!-- SCRIPT -->
+                                <!-- APEX CHART -->
+                                <script src="./libs/jquery/jquery.min.js"></script>
+                                <script src="./libs/jquery/jquery-ui.min.js"></script>
+                                <script src="./libs/moment/min/moment.min.js"></script>
+                                <script src="./libs/apexcharts/apexcharts.js"></script>
+                                <script src="./libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+                                <script src="./libs/peity/jquery.peity.min.js"></script>
+                                <script src="./libs/chart.js/Chart.bundle.min.js"></script>
+                                <script src="./libs/owl.carousel/owl.carousel.min.js"></script>
+                                <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
+                                <script src="./libs/bootstrap-datepicker/js/bootstrap-datetimepicker.min.js"></script>
+                                <script src="./js/countto.js"></script>
+                                <script src="./libs/date-picker/datepicker.js"></script>
+                                <script src="./libs/rating/js/custom-ratings.js"></script>
+                                <script src="./libs/rating/js/jquery.barrating.js"></script>
+                                <script src="./libs/circle-progress/circle-progress.min.js"></script>
+                                <script src="./libs/simplebar/simplebar.min.js"></script>
+
+
+                                <!-- APP JS -->
+                                <script src="./js/main.js"></script>
+                                <script src="./js/shortcode.js"></script>
+                                <script src="./js/pages/datepicker.js"></script>
+                                <script src="./js/pages/chart-circle.js"></script>
+
+<%- include('../partials/footer') %>

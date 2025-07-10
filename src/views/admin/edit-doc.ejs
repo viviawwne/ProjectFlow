@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <%- include('../partials/head') %>
+  <title>Editar Documento</title>
+</head>
+<body>
+  <%- include('../partials/header') %>
+
+  <div class="main">
+    <div class="main-content container">
+      <h2>Editar Documento - <%= project.project_title %></h2>
+
+      <form method="POST" action="/admin/documentation/edit/<%= doc.id %>">
+        <div class="form-group">
+          <label for="doc-title">Título <span style="color: red">*</span></label>
+          <input type="text" id="doc-title" name="title" class="form-control" value="<%= doc.title %>" maxlength="150" required>
+        </div>
+
+        <div class="form-group">
+          <label for="doc-content">Conteúdo <span style="color: red">*</span></label>
+          <textarea id="doc-content" name="content" class="form-control" rows="12" required><%= doc.content %></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Relacionar com tarefa (opcional)</label>
+          <select name="task_id" class="form-control">
+            <option value="">Nenhuma</option>
+            <% tasks.forEach(t => { %>
+              <option value="<%= t.id %>" <%= doc.task_id === t.id ? 'selected' : '' %>><%= t.task_name %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Salvar Alterações</button>
+        <a href="/admin/documentation/project/<%= project.id %>" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

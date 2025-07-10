@@ -3,6 +3,7 @@
 <head>
   <%- include('../partials/head') %>
   <title><%= pagetitle %></title>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 <body>
   <%- include('../partials/header') %>
@@ -10,25 +11,24 @@
   <div class="main">
     <div class="main-content">
       <div class="container">
-        
-        <!-- Header -->
+
         <div class="row mb-4">
-          <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-              <h1 class="mb-0"><%= pagetitle %></h1>
-              <a href="/admin/board" class="btn btn-secondary">
-                Voltar aos Boards
-              </a>
-            </div>
+          <div class="col-12 d-flex justify-content-between align-items-center">
+            <h1 class="mb-0"><%= projectName || 'Projeto' %></h1>
+            <a href="/admin/board" class="btn btn-secondary">Voltar aos Boards</a>
           </div>
         </div>
 
         <div class="text-center mb-4">
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createCardModal">
+          <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#createCardModal">
             + Criar Novo Card
+          </button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#customizeBoardModal">
+            Customizar Board
           </button>
         </div>
 
+        <!-- Modal Criar Novo Card -->
         <div class="modal fade" id="createCardModal" tabindex="-1" aria-labelledby="createCardModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <form action="/admin/cards" method="POST" class="modal-content">
@@ -55,83 +55,62 @@
           </div>
         </div>
 
-        <div class="row g-3">
+        <!-- Modal Customizar Board -->
+        <div class="modal fade" id="customizeBoardModal" tabindex="-1" aria-labelledby="customizeBoardModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <form id="customizeBoardForm" class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="customizeBoardModalLabel">Customizar Fases do Board</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <p>Selecione as fases que deseja exibir no board:</p>
+                <div class="form-check"><input class="form-check-input" type="checkbox" value="backlog" id="phaseBacklog"><label class="form-check-label" for="phaseBacklog">Backlog</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" value="ready" id="phaseReady"><label class="form-check-label" for="phaseReady">Ready</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" value="testing" id="phaseTesting"><label class="form-check-label" for="phaseTesting">Testing</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" value="released" id="phaseReleased"><label class="form-check-label" for="phaseReleased">Released</label></div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" value="done" id="phaseDone"><label class="form-check-label" for="phaseDone">Done</label></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Aplicar</button>
+              </div>
+            </form>
+          </div>
+        </div>
 
-          <%        const columns = [
-            { name: 'A Fazer', cards: todoCards, class: 'secondary' },
-            { name: 'Em Progresso', cards: progressCards, class: 'warning' },
-            { name: 'Em Revisão', cards: reviewCards, class: 'info' },
-            { name: 'Aprovado', cards: approvedCards, class: 'success' }
-        ];%>
+        <div class="row g-3">
+          <% const columns = [
+              { key: 'todo', name: 'A Fazer', cards: todoCards, class: 'secondary' },
+              { key: 'progress', name: 'Em Progresso', cards: progressCards, class: 'warning' },
+              { key: 'review', name: 'Em Revisão', cards: reviewCards, class: 'info' },
+              { key: 'approved', name: 'Aprovado', cards: approvedCards, class: 'success' }
+          ]; %>
 
           <% columns.forEach(col => { %>
             <div class="col-lg-3 col-md-6">
               <div class="box h-100">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <h5 class="mb-0 text-<%= col.class %>"><%= col.name %></h5>
-                  <span class="badge bg-<%= col.class %>"><%= col.cards ? col.cards.length : 0 %></span>
+                  <span class="badge bg-<%= col.class %>"><%= col.cards?.length || 0 %></span>
                 </div>
-                
-                <div style="max-height: 60vh; overflow-y: auto;">
+                <div class="card-list" data-status="<%= col.key %>" style="max-height: 60vh; overflow-y: auto;">
                   <% if (!col.cards || col.cards.length === 0) { %>
-                    <div class="text-center text-muted py-4">
+                    <div class="text-center text-muted py-4 no-cards-message">
                       <i class="bx bx-inbox fs-2 d-block mb-2"></i>
                       <small>Nenhum card nesta coluna</small>
                     </div>
-                  <% } else { %>
+                  <% } %>
+                  <% if (col.cards && col.cards.length > 0) { %>
                     <% col.cards.forEach(card => { %>
-                      <div class="card mb-3 border-start border-<%= col.class %> border-3">
+                      <div class="card mb-3 border-start border-<%= col.class %> border-3" data-card-id="<%= card.id %>">
                         <div class="card-body p-3">
                           <h6 class="card-title mb-2"><%= card.title %></h6>
                           <% if (card.description) { %>
                             <p class="card-text small text-muted mb-2"><%= card.description %></p>
                           <% } %>
-                          
-                          <!-- Tarefas -->
-                          <% if (card.tasks && card.tasks.length > 0) { %>
-                            <div class="mb-3">
-                              <small class="text-muted d-block mb-1">
-                                <i class="bx bx-task"></i> Tarefas:
-                              </small>
-                              <% card.tasks.forEach(task => { %>
-                                <div class="bg-light p-2 mb-1 rounded small">
-                                  <strong class="d-block"><%= task.task_name %></strong>
-                                  <% if (task.description) { %>
-                                    <span class="text-muted"><%= task.description %></span>
-                                  <% } %>
-                                </div>
-                              <% }) %>
-                            </div>
-                          <% } else { %>
-                            <small class="text-muted d-block mb-3">
-                              <i class="bx bx-info-circle"></i> Nenhuma tarefa atribuída
-                            </small>
-                          <% } %>
-                          
-                          <!-- Ações -->
                           <div class="d-flex flex-column gap-2">
-                            <a href="/admin/cards/<%= card.id %>" class="btn btn-sm btn-outline-<%= col.class %>">
-                              <i class="bx bx-show"></i> Ver Detalhes
-                            </a>
-                            
-                            <form action="/admin/cards/<%= card.id %>/status?_method=PATCH" method="POST" class="d-flex gap-1">
-                              <select name="status" class="form-select form-select-sm" required>
-                                <option value="">Mover para...</option>
-                                <option value="todo" <%= card.status === 'todo' ? 'selected' : '' %>>A Fazer</option>
-                                <option value="progress" <%= card.status === 'progress' ? 'selected' : '' %>>Em Progresso</option>
-                                <option value="review" <%= card.status === 'review' ? 'selected' : '' %>>Em Revisão</option>
-                                <option value="approved" <%= card.status === 'approved' ? 'selected' : '' %>>Aprovado</option>
-                              </select>
-                              <button type="submit" class="btn btn-sm btn-primary">
-                                <i class="bx bx-check"></i>
-                              </button>
-                            </form>
-                            
-                            <form action="/admin/cards/<%= card.id %>?_method=DELETE" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este card?');">
-                              <button type="submit" class="btn btn-sm btn-outline-danger w-100">
-                                <i class="bx bx-trash"></i> Excluir
-                              </button>
-                            </form>
+                            <a href="/admin/cards/<%= card.id %>" class="btn btn-sm btn-outline-<%= col.class %>"><i class="bx bx-show"></i> Ver Detalhes</a>
                           </div>
                         </div>
                       </div>
@@ -140,14 +119,111 @@
                 </div>
               </div>
             </div>
-          <% }); %>
-
+          <% }) %>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="overlay"></div>
   <%- include('../partials/footer') %>
+
+  <script>
+    document.querySelectorAll('.card-list').forEach(list => {
+      new Sortable(list, {
+        group: 'cards',
+        animation: 150,
+        onEnd: function (evt) {
+          const cardId = evt.item.dataset.cardId;
+          const newStatus = evt.to.dataset.status;
+          updateColumnCounts();
+          handleEmptyMessages(evt);
+          fetch(`/admin/cards/${cardId}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: newStatus })
+          }).then(res => { if (!res.ok) alert('Erro ao mover card!'); });
+        }
+      });
+    });
+
+    function updateColumnCounts() {
+      document.querySelectorAll('.card-list').forEach(list => {
+        const column = list.closest('.box');
+        const badge = column.querySelector('.badge');
+        const count = list.querySelectorAll('.card[data-card-id]').length;
+        if (badge) badge.textContent = count;
+      });
+    }
+
+    function handleEmptyMessages(evt) {
+      const lists = [evt.from, evt.to];
+      lists.forEach(list => {
+        const hasCards = list.querySelectorAll('.card[data-card-id]').length > 0;
+        const msg = list.querySelector('.no-cards-message');
+        if (!hasCards && !msg) {
+          const div = document.createElement('div');
+          div.className = 'text-center text-muted py-4 no-cards-message';
+          div.innerHTML = `<i class="bx bx-inbox fs-2 d-block mb-2"></i><small>Nenhum card nesta coluna</small>`;
+          list.appendChild(div);
+        } else if (hasCards && msg) {
+          msg.remove();
+        }
+      });
+    }
+
+    document.getElementById('customizeBoardForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const selectedPhases = [];
+      const phaseNames = {
+        backlog: { name: 'Backlog', class: 'dark' },
+        ready: { name: 'Ready', class: 'primary' },
+        testing: { name: 'Testing', class: 'warning' },
+        released: { name: 'Released', class: 'info' },
+        done: { name: 'Done', class: 'success' }
+      };
+      this.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
+        selectedPhases.push(input.value);
+      });
+      const row = document.querySelector('.row.g-3');
+      selectedPhases.forEach(phase => {
+        if (!document.getElementById(`column-${phase}`)) {
+          const col = document.createElement('div');
+          col.className = 'col-lg-3 col-md-6';
+          col.innerHTML = `
+            <div class="box h-100" id="column-${phase}">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0 text-${phaseNames[phase].class}">${phaseNames[phase].name}</h5>
+                <span class="badge bg-${phaseNames[phase].class}">0</span>
+              </div>
+              <div class="card-list" data-status="${phase}" style="max-height: 60vh; overflow-y: auto;">
+                <div class="text-center text-muted py-4 no-cards-message">
+                  <i class="bx bx-inbox fs-2 d-block mb-2"></i>
+                  <small>Nenhum card nesta coluna</small>
+                </div>
+              </div>
+            </div>
+          `;
+          row.appendChild(col);
+          new Sortable(col.querySelector('.card-list'), {
+            group: 'cards',
+            animation: 150,
+            onEnd: function (evt) {
+              const cardId = evt.item.dataset.cardId;
+              const newStatus = evt.to.dataset.status;
+              updateColumnCounts();
+              handleEmptyMessages(evt);
+              fetch(`/admin/cards/${cardId}/status`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+              }).then(res => { if (!res.ok) alert('Erro ao mover card!'); });
+            }
+          });
+        }
+      });
+      const modal = bootstrap.Modal.getInstance(document.getElementById('customizeBoardModal'));
+      modal.hide();
+    });
+  </script>
 </body>
 </html>
