@@ -53,9 +53,13 @@ const projectRoutes = require('./routes/admin/projectRoutes');
 const projectListRoutes = require('./routes/admin/project/list/listProjectRoutes');
 const deleteProjectRoutes = require('./routes/admin/project/delete/deleteProjectRoutes');
 const projectDetailsRoutes = require('./routes/admin/projectDetailsRoutes');
+//const editProjectRoutes = require('./routes/admin/project/edit/editProjectRoutes');
 
 const departmentRoutes = require('./routes/admin/department/departmentRoutes');
 const clientRoutes = require('./routes/admin/clientRoutes');
+
+const employeeRoutes = require('./routes/admin/employeeRoutes'); 
+app.use('/', employeeRoutes); 
 
 
 const taskRoutes = require('./routes/admin/taskRoutes');
@@ -79,6 +83,7 @@ app.use('/admin/departments', departmentRoutes);
 app.use('/admin/project', adminProjectRoutes);
 app.use('/admin/project', projectRoutes);
 app.use('/admin/project', projectListRoutes);
+//app.use('/admin', editProjectRoutes);
 app.use('/admin/project', deleteProjectRoutes);
 app.use('/admin/project-details', projectDetailsRoutes);
 

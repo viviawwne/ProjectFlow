@@ -35,27 +35,28 @@
           </div>
 
           <!-- Card Info -->
+          <!-- Card Info -->
           <div class="row mb-4">
             <div class="col-md-8">
               <div class="box">
                 <h5 class="mb-3">
                   <i class="bx bx-info-circle text-primary"></i> Informações do Card
                 </h5>
-                
+
                 <div class="form-group">
                   <label class="form-label fw-bold text-muted">
                     <i class="bx bx-text"></i> Título:
                   </label>
                   <p class="mb-0 fs-15"><%= card.title %></p>
                 </div>
-                
+
                 <div class="form-group">
                   <label class="form-label fw-bold text-muted">
                     <i class="bx bx-detail"></i> Descrição:
                   </label>
                   <p class="mb-0 fs-15"><%= card.description || 'Sem descrição' %></p>
                 </div>
-                
+
                 <div class="form-group mb-0">
                   <label class="form-label fw-bold text-muted">
                     <i class="bx bx-flag"></i> Status:
@@ -67,8 +68,22 @@
                     </span>
                   </div>
                 </div>
+
+                <!-- NOVO BLOCO: Responsável -->
+                <div class="form-group mt-3">
+                  <label class="form-label fw-bold text-muted">
+                    <i class="bx bx-user"></i> Responsável:
+                  </label>
+                  <% if (card.assignee_name) { %>
+                    <p class="mb-0 fs-15"><%= card.assignee_name %></p>
+                  <% } else { %>
+                    <p class="mb-0 text-muted fs-15">Não atribuído</p>
+                  <% } %>
+                </div>
               </div>
             </div>
+
+            
             <div class="col-md-4">
               <div class="box">
                 <h6 class="mb-3">
@@ -89,6 +104,16 @@
                   >
                     <i class="bx bx-edit"></i> Editar Card
                   </button>
+
+                   <!-- NOVO botão -->
+                  <!-- Botão "Atribuir Card" -->
+                  <button class="btn btn-info ms-0"
+                    data-bs-toggle="modal"
+                    data-bs-target="#assignCardModal">
+                    <i class="bx bx-user-plus"></i> Atribuir Card
+                  </button>
+
+
                   <button
                     class="btn btn-outline-danger"
                     onclick="deleteCard()"
@@ -328,6 +353,21 @@
                 <option value="approved" <%= card.status === 'approved' ? 'selected' : '' %>>Aprovado</option>
               </select>
             </div>
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-user"></i> Colaborador Responsável
+              </label>
+              <select id="editCardEmployee" name="employee_id" class="form-control select">
+                <option value="">Nenhum</option>
+                <% projectEmployees.forEach(emp => { %>
+                  <option value="<%= emp.id %>" <%= card.assigned_to === emp.id ? 'selected' : '' %>>
+                    <%= emp.username %> (<%= emp.email %>)
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+            <input type="hidden" id="editCardId" name="card_id" value="<%= card.id %>" />
+
           </div>
           <div class="modal-footer d-flex justify-content-end gap-2">
             <button
@@ -344,6 +384,45 @@
         </form>
       </div>
     </div>
+
+
+    <!-- Modal para atribuir card -->
+    <div class="modal fade custom-modal" id="assignCardModal" tabindex="-1">
+      <div class="modal-dialog">
+        <form action="/admin/cards/assign" method="POST" class="modal-content" autocomplete="off">
+          <div class="modal-header">  
+            <h5 class="modal-title">
+              <i class="bx bx-user-plus text-primary"></i> Atribuir Card a Colaborador
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <div class="form-group">
+              <label class="form-label fw-bold">
+                <i class="bx bx-user"></i> Colaborador
+              </label>
+              <select name="employee_id" class="form-control select" required>
+                <option value="" disabled selected>Selecione um colaborador</option>
+                <% projectEmployees.forEach(emp => { %>
+                  <option value="<%= emp.id %>"><%= emp.username %> (<%= emp.email %>)</option>
+                <% }) %>
+              </select>
+            </div>
+            <input type="hidden" name="card_id" value="<%= card.id %>" />
+          </div>
+          <div class="modal-footer d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+              <i class="bx bx-x"></i> Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary">
+              <i class="bx bx-check"></i> Atribuir
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
 
     <!-- Modal para editar tarefa -->
     <div class="modal fade custom-modal" id="editTaskModal" tabindex="-1">

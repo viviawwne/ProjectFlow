@@ -5,98 +5,184 @@
     <title>Novo Projeto</title>
 </head>
 <body>
-    <%- include('../partials/header') %>
+<%- include('../partials/header') %>
 
-    <div class="main">
-        <div class="main-content">
-            <div class="container">
-                <div class="box">
-                    <div class="box-header">
-                        <h4 class="box-title">Criar Novo Projeto</h4>
-                    </div>
-                    <div class="box-body">
-                        <% if (success) { %>
-                            <div class="alert alert-success"><%= success %></div>
-                        <% } %>
-                        <% if (error) { %>
-                            <div class="alert alert-danger"><%= error %></div>
-                        <% } %>
+<div class="main">
+    <div class="main-content">
+        <div class="container">
+            <div class="box">
+                <div class="box-header">
+                    <h4 class="box-title">Criar Novo Projeto</h4>
+                </div>
+                <div class="box-body">
+                    <% if (success) { %>
+                        <div class="alert alert-success"><%= success %></div>
+                    <% } %>
+                    <% if (error) { %>
+                        <div class="alert alert-danger"><%= error %></div>
+                    <% } %>
 
-                        <form action="/admin/project/create" method="POST" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label>Project ID</label>
-                                <input type="text" name="project_id" class="form-control" required>
-                            </div>
+                    <form action="/admin/project/create" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>Project ID</label>
+                            <input type="text" name="project_id" class="form-control" required>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Project Title</label>
-                                <input type="text" name="project_title" class="form-control" required>
-                            </div>
+                        <div class="form-group">
+                            <label>Project Title</label>
+                            <input type="text" name="project_title" class="form-control" required>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Department</label>
-                                <select name="department" class="form-control" required>
-                                    <% departments.forEach(dep => { %>
-                                        <option value="<%= dep.department_name %>"><%= dep.department_name %></option>
-                                    <% }) %>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Department</label>
+                            <select name="department" class="form-control" required>
+                                <% departments.forEach(dep => { %>
+                                    <option value="<%= dep.department_name %>"><%= dep.department_name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Priority</label>
-                                <select name="priority" class="form-control" required>
-                                    <option value="High">Alta</option>
-                                    <option value="Medium">Média</option>
-                                    <option value="Low">Baixa</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Priority</label>
+                            <select name="priority" class="form-control" required>
+                                <option value="High">Alta</option>
+                                <option value="Medium">Média</option>
+                                <option value="Low">Baixa</option>
+                            </select>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Client</label>
-                                <select name="client" class="form-control" required>
+                        <div class="form-group">
+                            <label>Client</label>
+                            <select name="client" class="form-control" required>
                                 <% clients.forEach(client => { %>
                                     <option value="<%= client.name %>"><%= client.name %></option>
                                 <% }) %>
-                                </select>
-                            </div>
+                            </select>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Start Date</label>
-                                <input type="date" name="start_date" class="form-control" required>
-                            </div>
+                        <div class="form-group">
+                            <label>Start Date</label>
+                            <input type="date" name="start_date" class="form-control" required>
+                        </div>
 
-                            <div class="form-group">
-                                <label>End Date</label>
-                                <input type="date" name="end_date" class="form-control" required>
-                            </div>
+                        <div class="form-group">
+                            <label>End Date</label>
+                            <input type="date" name="end_date" class="form-control" required>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Description</label>
-                                <textarea name="description" class="form-control" rows="4"></textarea>
-                            </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" class="form-control" rows="4"></textarea>
+                        </div>
 
-                            <div class="form-group">
-                                <label>Attachment (Imagem ou Documento)</label>
-                                <input type="file" name="attachment" class="form-control">
-                            </div>
+                        <div class="form-group">
+                            <label>Attachment (Imagem ou Documento)</label>
+                            <input type="file" name="attachment" class="form-control">
+                        </div>
 
-                            <div class="form-group">
-                                <label>Status de Trabalho</label>
-                                <select name="work_status" class="form-control" required>
-                                    <option value="Pending">Pendente</option>
-                                    <option value="On Progress">Em Andamento</option>
-                                    <option value="Completed">Concluído</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label>Status de Trabalho</label>
+                            <select name="work_status" class="form-control" required>
+                                <option value="Pending">Pendente</option>
+                                <option value="On Progress">Em Andamento</option>
+                                <option value="Completed">Concluído</option>
+                            </select>
+                        </div>
 
-                            <button type="submit" class="btn btn-primary mt-3">Criar Projeto</button>
-                        </form>
-                    </div>
+                        <div class="form-group">
+                            <label>Adicionar Colaboradores</label>
+                            <input type="text" id="employeeSearch" class="form-control" placeholder="Digite nome ou e-mail do colaborador" autocomplete="off">
+                            <ul id="suggestions" class="list-group mt-1" style="position: absolute; z-index: 1000;"></ul>
+
+                            <div id="selectedEmployees" class="mt-2"></div>
+
+                            <!-- Campo oculto com os IDs dos colaboradores -->
+                            <input type="hidden" name="employee_ids" id="employeeIds">
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-3">Criar Projeto</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="overlay"></div>
+<div class="overlay"></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('employeeSearch');
+    const suggestions = document.getElementById('suggestions');
+    const selectedContainer = document.getElementById('selectedEmployees');
+    const hiddenField = document.getElementById('employeeIds');
+
+    let selectedEmployees = [];
+
+    input.addEventListener('input', async () => {
+        const query = input.value.trim();
+        if (query.length < 2) {
+            suggestions.innerHTML = '';
+            suggestions.style.display = 'none';
+            return;
+        }
+
+        const res = await fetch(`/admin/employees/search?term=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        suggestions.innerHTML = '';
+        data.forEach(emp => {
+            const li = document.createElement('li');
+            li.className = 'list-group-item list-group-item-action';
+            li.style.cursor = 'pointer';
+            li.textContent = `${emp.username} (${emp.email})`;
+            li.addEventListener('click', () => {
+                if (!selectedEmployees.find(e => e.id === emp.id)) {
+                    selectedEmployees.push(emp);
+                    renderSelected();
+                    updateHiddenField();
+                }
+                input.value = '';
+                suggestions.innerHTML = '';
+                suggestions.style.display = 'none';
+            });
+            suggestions.appendChild(li);
+        });
+
+        suggestions.style.display = data.length ? 'block' : 'none';
+    });
+
+    function renderSelected() {
+        selectedContainer.innerHTML = '';
+        selectedEmployees.forEach(emp => {
+            const badge = document.createElement('span');
+            badge.className = 'badge badge-primary mr-1';
+            badge.textContent = `${emp.username} (${emp.email})`;
+
+            const removeBtn = document.createElement('span');
+            removeBtn.textContent = ' ×';
+            removeBtn.style.cursor = 'pointer';
+            removeBtn.addEventListener('click', () => {
+                selectedEmployees = selectedEmployees.filter(e => e.id !== emp.id);
+                renderSelected();
+                updateHiddenField();
+            });
+
+            badge.appendChild(removeBtn);
+            selectedContainer.appendChild(badge);
+        });
+    }
+
+    function updateHiddenField() {
+        hiddenField.value = selectedEmployees.map(emp => emp.id).join(',');
+    }
+
+    document.addEventListener('click', (e) => {
+        if (!suggestions.contains(e.target) && e.target !== input) {
+            suggestions.innerHTML = '';
+            suggestions.style.display = 'none';
+        }
+    });
+});
+</script>
+
 </body>
 </html>
