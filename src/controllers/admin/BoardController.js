@@ -45,13 +45,6 @@ exports.renderBoardByProject = async (req, res) => {
       approvedCards = cardsWithTasks.filter(c => c.status === 'approved');
     }
 
-    // Busca tarefas que pertencem ao projeto, mas não estão atribuídas a nenhum card
-    const [unassignedTasks] = await pool.execute(
-      `SELECT * FROM tasks 
-       WHERE card_id IS NULL 
-       AND project_id = ?`,
-      [projectId]
-    );
 
     // Renderiza o board
     res.render('admin/board', {
@@ -61,8 +54,7 @@ exports.renderBoardByProject = async (req, res) => {
       todoCards,
       progressCards,
       reviewCards,
-      approvedCards,
-      unassignedTasks
+      approvedCards
     });
 
   } catch (error) {
