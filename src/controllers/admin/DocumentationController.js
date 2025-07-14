@@ -23,28 +23,28 @@ exports.renderCreateDoc = async (req, res) => {
 
     const project = projectResult[0];
 
-    // Corrigido para buscar tarefas pelo ID do projeto
-    const [tasks] = await pool.query(
-      'SELECT id, task_name FROM tasks WHERE project_id = ?',
+    // Buscar os cards do projeto
+    const [cards] = await pool.query(
+      'SELECT id, title FROM cards WHERE project_id = ?',
       [project.id]
     );
 
-    res.render('admin/create-doc', { project, tasks });
+    res.render('admin/create-doc', { project, cards });
   } catch (err) {
     console.error('Erro ao carregar formulário de criação de documento:', err);
     res.status(500).send('Erro interno ao carregar formulário.');
   }
 };
 
-// Cria documento no banco, vinculado ao projeto e tarefa (opcional)
+// Cria documento no banco, vinculado ao projeto e ao card (opcional)
 exports.createDocument = async (req, res) => {
   try {
-    const { title, content, task_id } = req.body;
+    const { title, content, card_id } = req.body;
     const { projectId } = req.params;
 
     await pool.query(
-      'INSERT INTO documents (title, content, project_id, task_id) VALUES (?, ?, ?, ?)',
-      [title, content, projectId, task_id || null]
+      'INSERT INTO documents (title, content, project_id, card_id) VALUES (?, ?, ?, ?)',
+      [title, content, projectId, card_id || null]
     );
 
     res.redirect(`/admin/documentation/project/${projectId}`);
@@ -69,9 +69,9 @@ exports.listDocuments = async (req, res) => {
     }
 
     const [docs] = await pool.query(
-      `SELECT d.id, d.title, d.content, t.task_name
+      `SELECT d.id, d.title, d.content, c.card_title
        FROM documents d
-       LEFT JOIN tasks t ON d.task_id = t.id
+       LEFT JOIN cards c ON d.card_id = c.id
        WHERE d.project_id = ?`,
       [projectId]
     );
@@ -94,9 +94,9 @@ exports.renderEditForm = async (req, res) => {
     }
 
     const [[project]] = await pool.query('SELECT * FROM projects WHERE id = ?', [doc.project_id]);
-    const [tasks] = await pool.query('SELECT id, task_name FROM tasks WHERE project_id = ?', [project.id]);
+    const [cards] = await pool.query('SELECT id, title FROM cards WHERE project_id = ?', [project.id]);
 
-    res.render('admin/edit-doc', { doc, project, tasks });
+    res.render('admin/edit-doc', { doc, project, cards });
   } catch (err) {
     console.error('Erro ao carregar documento para edição:', err);
     res.status(500).send('Erro ao carregar formulário de edição.');
@@ -107,14 +107,13 @@ exports.renderEditForm = async (req, res) => {
 exports.updateDoc = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, task_id } = req.body;
+    const { title, content, card_id } = req.body;
 
     await pool.query(
-      'UPDATE documents SET title = ?, content = ?, task_id = ? WHERE id = ?',
-      [title, content, task_id || null, id]
+      'UPDATE documents SET title = ?, content = ?, card_id = ? WHERE id = ?',
+      [title, content, card_id || null, id]
     );
 
-    // Buscar projeto_id para redirecionar corretamente
     const [[doc]] = await pool.query('SELECT project_id FROM documents WHERE id = ?', [id]);
     res.redirect(`/admin/documentation/project/${doc.project_id}`);
   } catch (err) {
@@ -128,7 +127,6 @@ exports.deleteDoc = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Obter project_id antes de deletar
     const [[doc]] = await pool.query('SELECT project_id FROM documents WHERE id = ?', [id]);
 
     await pool.query('DELETE FROM documents WHERE id = ?', [id]);

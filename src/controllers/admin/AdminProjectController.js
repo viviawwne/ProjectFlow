@@ -38,15 +38,61 @@ module.exports = {
   },
 
   // =============================
+  // DETALHES DO PROJETO
+  // =============================
+  renderProjectDetails: async (req, res) => {
+    try {
+      const projectId = req.query.data;
+
+      const [[project]] = await pool.query('SELECT * FROM projects WHERE id = ?', [projectId]);
+
+      if (!project) {
+        return res.status(404).send('Projeto não encontrado.');
+      }
+
+      // Buscar colaboradores associados ao projeto
+      const [employees] = await pool.query(`
+        SELECT e.id, e.username, e.email
+        FROM employees e
+        JOIN project_employees pe ON e.id = pe.employee_id
+        WHERE pe.project_id = ?
+      `, [projectId]);
+
+      // Buscar cards (ou tarefas) relacionados ao projeto
+      const [cards] = await pool.query(`
+        SELECT id, card_title, status
+        FROM cards
+        WHERE project_id = ?
+      `, [projectId]);
+
+      res.render('admin/project-details', {
+        title: 'Detalhes do Projeto',
+        project,
+        employees,
+        cards
+      });
+
+    } catch (err) {
+      console.error('❌ Erro ao carregar detalhes do projeto:', err);
+      res.status(500).send('Erro ao carregar detalhes do projeto.');
+    }
+  },
+
+  // =============================
   // FORMULÁRIO PARA NOVO PROJETO
   // =============================
   renderNewProject: async (req, res) => {
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
+
     try {
       const [departments] = await pool.query('SELECT department_name FROM departments');
       const [clients]     = await pool.query('SELECT id, name FROM client');
       const [teams]       = await pool.query('SELECT name FROM team');
 
       res.render('admin/new-project', {
+        session: req.session,
         departments,
         clients,
         teams,
@@ -76,22 +122,19 @@ module.exports = {
         end_date,
         description,
         work_status,
-        employee_ids // ← será uma string CSV: "1,2,3"
+        employee_ids
       } = req.body;
 
       const attachment_file = req.file ? req.file.filename : null;
 
       await conn.beginTransaction();
 
-      // Inserir novo projeto
-      const insertProjectQuery = `
+      await conn.execute(`
         INSERT INTO projects (
           project_id, project_title, department, priority, client,
           start_date, end_date, description, attachment_file, work_status
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `;
-
-      await conn.execute(insertProjectQuery, [
+      `, [
         project_id,
         project_title,
         department,
@@ -104,7 +147,6 @@ module.exports = {
         work_status
       ]);
 
-      // Associar colaboradores ao projeto
       if (employee_ids && employee_ids.length > 0) {
         const employeeArray = employee_ids
           .split(',')

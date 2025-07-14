@@ -1,11 +1,18 @@
 const { pool } = require('../../config/db');
 
-// Renderiza o formulário de novo cliente
+// =========================
+// FORMULÁRIO DE NOVO CLIENTE
+// =========================
 const renderNewClientForm = (req, res) => {
-  res.render('admin/new-client');
+  res.render('admin/new-client', {
+    error: null,
+    success: null
+  });
 };
 
-// Criação de novo cliente
+// =========================
+// CRIAÇÃO DE NOVO CLIENTE
+// =========================
 const createClient = async (req, res) => {
   const {
     name,
@@ -18,24 +25,37 @@ const createClient = async (req, res) => {
     about
   } = req.body;
 
-  const image = req.file ? req.file.filename : null;
+  const image = req.file ? req.file.filename : 'default.png';
 
   try {
     await pool.execute(`
-      INSERT INTO client (name, email_id, contact_no, country, address, status, website, about, image)
+      INSERT INTO client 
+        (name, email_id, contact_no, country, address, status, website, about, image)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `, [
-      name, email, contact_no, country, address, status, website, about, image
+      name.trim(),
+      email.trim(),
+      contact_no.trim(),
+      country.trim(),
+      address.trim(),
+      status.trim(),
+      website.trim(),
+      about.trim(),
+      image
     ]);
 
+    console.log('✅ Cliente cadastrado com imagem:', image);
     res.redirect('/admin/clients');
+
   } catch (err) {
     console.error('❌ Erro ao cadastrar cliente:', err);
     res.status(500).send('Erro interno ao salvar cliente.');
   }
 };
 
-// Listagem de clientes
+// =========================
+// LISTAGEM DE CLIENTES
+// =========================
 const renderClients = async (req, res) => {
   try {
     const [clients] = await pool.query('SELECT * FROM client ORDER BY id DESC LIMIT 8');
@@ -45,8 +65,9 @@ const renderClients = async (req, res) => {
       clients,
       allClients
     });
+
   } catch (err) {
-    console.error('Erro ao buscar clientes:', err);
+    console.error('❌ Erro ao buscar clientes:', err);
     res.render('admin/clients', {
       clients: [],
       allClients: [],
@@ -55,20 +76,26 @@ const renderClients = async (req, res) => {
   }
 };
 
-// Excluir cliente
+// =========================
+// EXCLUSÃO DE CLIENTE
+// =========================
 const deleteClient = async (req, res) => {
   const { id } = req.params;
 
   try {
     await pool.execute('DELETE FROM client WHERE id = ?', [id]);
+    console.log(`🗑️ Cliente ${id} removido com sucesso.`);
     res.redirect('/admin/clients');
+
   } catch (err) {
-    console.error('Erro ao deletar cliente:', err);
+    console.error('❌ Erro ao deletar cliente:', err);
     res.status(500).send('Erro ao deletar cliente');
   }
 };
 
-// Detalhes do cliente com contagem de projetos
+// =========================
+// DETALHES DO CLIENTE
+// =========================
 const renderClientDetails = async (req, res) => {
   const clientId = req.params.id;
 
@@ -95,17 +122,15 @@ const renderClientDetails = async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Erro ao carregar detalhes do cliente:', err);
+    console.error('❌ Erro ao carregar detalhes do cliente:', err);
     res.status(500).send('Erro ao carregar detalhes do cliente');
   }
 };
-
 
 module.exports = {
   renderNewClientForm,
   createClient,
   renderClients,
   deleteClient,
-  renderClientDetails 
+  renderClientDetails
 };
-

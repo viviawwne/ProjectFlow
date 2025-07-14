@@ -1,128 +1,286 @@
+
 <!-- views/admin/client-details.ejs -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Cliente</title>
-  </head>
-<body>
 
-<div class="main">
-    <div class="main-content client project">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/images/favicon.svg" type="image/png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <!-- Boxicons -->
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+    <!-- Plugins -->
+    <link rel="stylesheet" href="/libs/date-picker/datepicker.css">
+    <link rel="stylesheet" href="/libs/owl.carousel/assets/owl.carousel.min.css">
+
+    <!-- CSS principal -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/icons.min.css">
+    <link rel="stylesheet" href="/css/grid.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+  </head>
+
+  <body>
+    <% 
+      const loguser = session?.user?.username || 'Viviane';
+      const logemail = session?.user?.email || 'viviane@gmail.com';
+      const logpicture = session?.user?.picture || 'default.png';
+      const pagetitle = typeof title !== 'undefined' ? title : '';
+    %>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <a href="/admin">
+          <img src="/images/logo-projectflow.png" alt="logo">
+        </a>
+        <div class="sidebar-close" id="sidebar-close">
+          <i class='bx bx-x'></i>
+        </div>
+      </div>
+
+      <!-- SIDEBAR MENU -->
+      <div class="simlebar-sc" data-simplebar>
+        <ul class="sidebar-menu tf">
+          <li class="sidebar-submenu">
+            <a href="/admin/dashboard" class="sidebar-menu-dropdown">
+              <i class='bx bxs-home'></i>
+              <span>Dashboard</span>
+              <div class="dropdown-icon">
+                <i class='bx bx-chevron-down'></i>
+              </div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content">
+              <li><a href="/admin/dashboard">Dashboard</a></li>
+            </ul>
+          </li>
+
+          <li class="sidebar-submenu">
+            <a href="/admin/project" class="sidebar-menu-dropdown">
+              <i class='bx bxs-bolt'></i>
+              <span>Projeto</span>
+              <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content">
+              <li><a href="/admin/project">Visão Geral</a></li>
+              <li><a href="/admin/project/list">Lista de Projetos</a></li>
+            </ul>
+          </li>
+
+          <li class="sidebar-submenu">
+            <a href="/admin/departments" class="sidebar-menu-dropdown">
+              <i class='bx bxs-building'></i>
+              <span>Departamento</span>
+              <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content">
+              <li><a href="/admin/departments">Lista de Departamentos</a></li>
+            </ul>
+          </li>
+
+          <li class="sidebar-submenu">
+            <a href="/admin/clients" class="sidebar-menu-dropdown">
+              <i class='bx bxs-user'></i>
+              <span>Cliente</span>
+              <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content">
+              <li><a href="/admin/clients">Lista</a></li>
+            </ul>
+          </li>
+
+          <li class="sidebar-submenu">
+            <a href="/admin/documentation" class="sidebar-menu-dropdown">
+              <i class='bx bxs-book'></i>
+              <span>Documentação</span>
+              <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+            </a>
+            <ul class="sidebar-menu sidebar-menu-dropdown-content">
+              <li><a href="/admin/documentation">Documentos</a></li>
+              <li><a href="/admin/documentation/api">Referência da API</a></li>
+            </ul>
+          </li>
+
+          <li><a href="/admin/board"><i class='bx bxs-dashboard'></i><span>Board-Flow</span></a></li>
+
+          <li>
+            <a class="darkmode-toggle" id="darkmode-toggle" onclick="switchTheme()">
+              <div><i class='bx bx-cog mr-10'></i><span>Modo Escuro</span></div>
+              <span class="darkmode-switch"></span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- END SIDEBAR -->
+
+    <!-- Main Header -->
+    <div class="main-header">
+      <div class="d-flex">
+        <div class="mobile-toggle" id="mobile-toggle">
+          <i class='bx bx-menu'></i>
+        </div>
+        <div class="main-title"><%= pagetitle %></div>
+      </div>
+
+      <div class="d-flex align-items-center">
+        <div class="dropdown d-inline-block mt-12">
+          <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="info d-xl-inline-block color-span">
+              <span class="d-block fs-20 font-w600"><%= loguser %></span>
+              <span class="d-block mt-7"><%= logemail %></span>
+            </span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end">
+            <a class="dropdown-item" href="/admin/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span>Profile</span></a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item text-danger" href="/logout"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span>Logout</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Main Header -->
+
+    <div class="main">
+      <div class="main-content client project">
         <div class="row">
 
-            <!-- Status Cards -->
-            <div class="col-12 d-flex gap-3 flex-wrap">
-                <div class="icon-box bg-color-6 d-block text-center color-6">
-                    <h5>Total Projects</h5>
-                    <span class="number"><%= countByStatus.total %></span>
+        <!-- Status Cards -->
+        <div class="col-12 d-flex gap-3 flex-wrap justify-content-center mb-4">
+            <div class="icon-box bg-color-6 d-flex flex-column align-items-center p-4 shadow rounded">
+                <div class="mb-2">
+                    <i class='bx bxs-layer fs-2 color-6'></i>
                 </div>
-                <div class="icon-box bg-color-9 d-block text-center color-9">
-                    <h5>Pending</h5>
-                    <span class="number"><%= countByStatus.pending %></span>
+                <h6 class="mb-1 fw-bold">Total Projects</h6>
+                <span class="number fs-4"><%= countByStatus.total %></span>
+            </div>
+            <div class="icon-box bg-color-9 d-flex flex-column align-items-center p-4 shadow rounded">
+                <div class="mb-2">
+                    <i class='bx bx-time-five fs-2 color-9'></i>
                 </div>
-                <div class="icon-box bg-color-7 d-block text-center color-7">
-                    <h5>On Going</h5>
-                    <span class="number"><%= countByStatus.ongoing %></span>
+                <h6 class="mb-1 fw-bold">Pending</h6>
+                <span class="number fs-4"><%= countByStatus.pending %></span>
+            </div>
+            <div class="icon-box bg-color-7 d-flex flex-column align-items-center p-4 shadow rounded">
+                <div class="mb-2">
+                    <i class='bx bx-loader-circle fs-2 color-7'></i>
                 </div>
-                <div class="icon-box bg-color-8 d-block text-center color-8">
-                    <h5>Completed</h5>
-                    <span class="number"><%= countByStatus.completed %></span>
+                <h6 class="mb-1 fw-bold">On Going</h6>
+                <span class="number fs-4"><%= countByStatus.ongoing %></span>
+            </div>
+            <div class="icon-box bg-color-8 d-flex flex-column align-items-center p-4 shadow rounded">
+                <div class="mb-2">
+                    <i class='bx bxs-check-circle fs-2 color-8'></i>
                 </div>
+                <h6 class="mb-1 fw-bold">Completed</h6>
+                <span class="number fs-4"><%= countByStatus.completed %></span>
+            </div>
+        </div>
+
+          <!-- Client Info + Tabs -->
+          <div class="col-12 mt-4">
+            <div class="box user-pro-list overflow-hidden mb-30 text-center">
+              <div class="box-body">
+                <% if (client.image) { %>
+                  <img class="rounded-circle" src="/images/client/<%= client.image %>" width="100" height="100" alt="Client Logo">
+                <% } else { %>
+                  <div class="rounded-circle bg-secondary text-white p-4">No Logo</div>
+                <% } %>
+                <h2 class="mt-3"><%= client.name %></h2>
+                <span class="badge <%= client.status === 'Active' ? 'badge-success' : 'badge-danger' %>"><%= client.status %></span>
+              </div>
             </div>
 
-            <!-- Client Info + Tabs -->
-            <div class="col-12 mt-4">
-                <div class="box user-pro-list overflow-hidden mb-30 text-center">
-                    <div class="box-body">
-                        <% if (client.image) { %>
-                            <img class="rounded-circle" src="/public/images/client/<%= client.image %>" width="100" height="100" alt="Client Logo">
-                        <% } else { %>
-                            <div class="rounded-circle bg-secondary text-white p-4">No Logo</div>
-                        <% } %>
-                        <h2 class="mt-3"><%= client.name %></h2>
-                        <span class="badge <%= client.status === 'Active' ? 'badge-success' : 'badge-danger' %>"><%= client.status %></span>
-                    </div>
+            <!-- Tabs: Overview / Projects -->
+            <div class="box">
+              <ul class="nav nav-tabs">
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#overview">Overview</a></li>
+                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#projects">Projects</a></li>
+              </ul>
+              <div class="tab-content p-3">
+
+                <!-- Overview -->
+                <div class="tab-pane fade show active" id="overview">
+                  <h5>About</h5>
+                  <p><%= client.about || 'No description provided.' %></p>
+
+                  <table class="table">
+                    <tbody>
+                      <tr><td>Email:</td><td><%= client.email_id %></td></tr>
+                      <tr><td>Contact:</td><td><%= client.contact_no %></td></tr>
+                      <tr><td>Country:</td><td><%= client.country %></td></tr>
+                      <tr><td>Address:</td><td><%= client.address %></td></tr>
+                      <tr><td>Website:</td><td><%= client.website %></td></tr>
+                    </tbody>
+                  </table>
                 </div>
 
-                <!-- Tabs: Overview / Projects -->
-                <div class="box">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#overview">Overview</a></li>
-                        <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#projects">Projects</a></li>
-                    </ul>
-                    <div class="tab-content p-3">
-
-                        <!-- Overview -->
-                        <div class="tab-pane fade show active" id="overview">
-                            <h5>About</h5>
-                            <p><%= client.about || 'No description provided.' %></p>
-
-                            <table class="table">
-                                <tbody>
-                                <tr><td>Email:</td><td><%= client.email_id %></td></tr>
-                                <tr><td>Contact:</td><td><%= client.contact_no %></td></tr>
-                                <tr><td>Country:</td><td><%= client.country %></td></tr>
-                                <tr><td>Address:</td><td><%= client.address %></td></tr>
-                                <tr><td>Website:</td><td><%= client.website %></td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!-- Projects -->
-                        <div class="tab-pane fade" id="projects">
-                            <% if (projects.length === 0) { %>
-                                <p>No projects found for this client.</p>
-                            <% } else { %>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Project</th>
-                                            <th>Start</th>
-                                            <th>Deadline</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <% projects.forEach(p => { %>
-                                            <tr>
-                                                <td><%= p.project_id %></td>
-                                                <td><a href="/admin/project/details?data=<%= p.id %>"><%= p.project_title %></a></td>
-                                                <td><%= p.start_date %></td>
-                                                <td><%= p.end_date %></td>
-                                                <td>
-                                                    <span class="badge <%= 
-                                                        p.work_status === 'Pending' ? 'badge-danger' : 
-                                                        p.work_status === 'On Progress' ? 'badge-warning' : 
-                                                        'badge-success' 
-                                                    %>"><%= p.work_status %></span>
-                                                </td>
-                                                <td>
-                                                    <a href="/admin/project/delete?data=<%= p.project_id %>" class="btn btn-danger btn-sm">Delete</a>
-                                                </td>
-                                            </tr>
-                                        <% }) %>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            <% } %>
-                        </div>
+                <!-- Projects -->
+                <div class="tab-pane fade" id="projects">
+                  <% if (projects.length === 0) { %>
+                    <p>No projects found for this client.</p>
+                  <% } else { %>
+                    <div class="table-responsive">
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Project</th>
+                            <th>Start</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% projects.forEach(p => { %>
+                            <tr>
+                              <td><%= p.project_id %></td>
+                              <td><a href="/admin/project/details?data=<%= p.id %>"><%= p.project_title %></a></td>
+                              <td><%= p.start_date %></td>
+                              <td><%= p.end_date %></td>
+                              <td>
+                                <span class="badge <%= 
+                                  p.work_status === 'Pending' ? 'badge-danger' : 
+                                  p.work_status === 'On Progress' ? 'badge-warning' : 
+                                  'badge-success' 
+                                %>"><%= p.work_status %></span>
+                              </td>
+                              <td>
+                                <a href="/admin/project/delete?data=<%= p.project_id %>" class="btn btn-danger btn-sm">Delete</a>
+                              </td>
+                            </tr>
+                          <% }) %>
+                        </tbody>
+                      </table>
                     </div>
+                  <% } %>
                 </div>
+              </div>
             </div>
+          </div>
 
         </div>
+      </div>
     </div>
-</div>
 
-<div class="overlay"></div>
-<!-- JS GLOBAL -->
-<script src="/libs/jquery/jquery.min.js"></script>
-<script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/libs/simplebar/simplebar.min.js"></script>
-<script src="/js/main.js"></script>
-<script src="/js/script.js"></script>
-</body>
+    <div class="overlay"></div>
+    <!-- JS GLOBAL -->
+    <script src="/libs/jquery/jquery.min.js"></script>
+    <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/libs/simplebar/simplebar.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/script.js"></script>
+  </body>
 </html>

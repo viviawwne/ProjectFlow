@@ -5,6 +5,7 @@ const path = require('path');
 const { pool } = require('../../../../config/db');
 const fs = require('fs');
 
+
 const uploadDir = path.join(__dirname, '../../../public/images/profile');
 
 // Configuração do Multer

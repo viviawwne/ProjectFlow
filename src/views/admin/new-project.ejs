@@ -1,11 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('../partials/head') %>
-    <title>Novo Projeto</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novo Projeto</title>
+
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/images/favicon.svg" type="image/png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Boxicons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <!-- Plugins -->
+  <link rel="stylesheet" href="/libs/date-picker/datepicker.css">
+  <link rel="stylesheet" href="/libs/owl.carousel/assets/owl.carousel.min.css">
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/icons.min.css">
+  <link rel="stylesheet" href="/css/grid.css">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/responsive.css">
 </head>
 <body>
-<%- include('../partials/header') %>
+<%
+  const loguser = user?.username || 'Viviane';
+  const logemail = user?.email || 'viviane@gmail.com';
+  const logpicture = user?.picture || 'default.png';
+%>
+<div class="main-wrapper">
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <a href="/admin">
+      <img src="/images/logo-projectflow.png" alt="logo">
+    </a>
+    <div class="sidebar-close" id="sidebar-close">
+      <i class='bx bx-x'></i>
+    </div>
+  </div>
+
+  <!-- SIDEBAR MENU -->
+  <div class="simlebar-sc" data-simplebar>
+    <ul class="sidebar-menu tf">
+      <li class="sidebar-submenu">
+        <a href="/admin/dashboard" class="sidebar-menu-dropdown">
+          <i class='bx bxs-home'></i>
+          <span>Dashboard</span>
+          <div class="dropdown-icon">
+            <i class='bx bx-chevron-down'></i>
+          </div>
+        </a>
+        <ul class="sidebar-menu sidebar-menu-dropdown-content">
+          <li><a href="/admin/dashboard">Dashboard</a></li>
+        </ul>
+      </li>
+
+      <li class="sidebar-submenu">
+        <a href="/admin/project" class="sidebar-menu-dropdown">
+          <i class='bx bxs-bolt'></i>
+          <span>Projeto</span>
+          <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+        </a>
+        <ul class="sidebar-menu sidebar-menu-dropdown-content">
+          <li><a href="/admin/project">Visão Geral</a></li>
+          <li><a href="/admin/project/list">Lista de Projetos</a></li>
+        </ul>
+      </li>
+
+      <li class="sidebar-submenu">
+        <a href="/admin/departments" class="sidebar-menu-dropdown">
+          <i class='bx bxs-building'></i>
+          <span>Departamento</span>
+          <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+        </a>
+        <ul class="sidebar-menu sidebar-menu-dropdown-content">
+          <li><a href="/admin/departments">Lista de Departamentos</a></li>
+        </ul>
+      </li>
+
+      <li class="sidebar-submenu">
+        <a href="/admin/clients" class="sidebar-menu-dropdown">
+          <i class='bx bxs-user'></i>
+          <span>Cliente</span>
+          <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+        </a>
+        <ul class="sidebar-menu sidebar-menu-dropdown-content">
+          <li><a href="/admin/clients">Lista</a></li>
+        </ul>
+      </li>
+
+      <li class="sidebar-submenu">
+        <a href="/admin/documentation" class="sidebar-menu-dropdown">
+          <i class='bx bxs-book'></i>
+          <span>Documentação</span>
+          <div class="dropdown-icon"><i class='bx bx-chevron-down'></i></div>
+        </a>
+        <ul class="sidebar-menu sidebar-menu-dropdown-content">
+          <li><a href="/admin/documentation">Documentos</a></li>
+          <li><a href="/admin/documentation/api">Referência da API</a></li>
+        </ul>
+      </li>
+
+      <li><a href="/admin/board"><i class='bx bxs-dashboard'></i><span>Board-Flow</span></a></li>
+
+      <li>
+        <a class="darkmode-toggle" id="darkmode-toggle" onclick="switchTheme()">
+          <div><i class='bx bx-cog mr-10'></i><span>Modo Escuro</span></div>
+          <span class="darkmode-switch"></span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- END SIDEBAR -->
+
+<!-- Main Header -->
+<div class="main-header">
+  <div class="d-flex">
+    <div class="mobile-toggle" id="mobile-toggle">
+      <i class='bx bx-menu'></i>
+    </div>
+    <div class="main-title">Novo Projeto</div>
+  </div>
+
+  <div class="d-flex align-items-center">
+    <div class="dropdown d-inline-block mt-12">
+      <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+              data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="info d-xl-inline-block color-span">
+          <span class="d-block fs-20 font-w600"><%= loguser %></span>
+          <span class="d-block mt-7"><%= logemail %></span>
+        </span>
+      </button>
+      <div class="dropdown-menu dropdown-menu-end">
+        <a class="dropdown-item" href="/admin/profile"><i class="bx bx-user font-size-16 align-middle me-1"></i> <span>Profile</span></a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item text-danger" href="/logout"><i class="bx bx-power-off font-size-16 align-middle me-1 text-danger"></i> <span>Logout</span></a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Main Header -->
 
 <div class="main">
     <div class="main-content">
@@ -106,14 +247,22 @@
         </div>
     </div>
 </div>
+</div>
 
 <div class="overlay"></div>
+<script src="/libs/jquery/jquery.min.js"></script>
+    <script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/libs/simplebar/simplebar.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/script.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('employeeSearch');
     const suggestions = document.getElementById('suggestions');
     const selectedContainer = document.getElementById('selectedEmployees');
     const hiddenField = document.getElementById('employeeIds');
+
 
     let selectedEmployees = [];
 

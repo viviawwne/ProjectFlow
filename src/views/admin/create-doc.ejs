@@ -23,11 +23,11 @@
         </div>
 
         <div class="form-group">
-          <label>Relacionar com tarefa (opcional)</label>
-          <select name="task_id" class="form-control">
-            <option value="">Nenhuma</option>
-            <% tasks.forEach(t => { %>
-              <option value="<%= t.id %>"><%= t.task_name %></option>
+          <label>Relacionar com Card (opcional)</label>
+          <select name="card_id" class="form-control">
+            <option value="">Nenhum</option>
+            <% cards.forEach(card => { %>
+              <option value="<%= card.id %>"><%= card.title %></option>
             <% }) %>
           </select>
         </div>
@@ -36,5 +36,12 @@
       </form>
     </div>
   </div>
+
+  <!-- JS GLOBAL -->
+<script src="/libs/jquery/jquery.min.js"></script>
+<script src="/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/libs/simplebar/simplebar.min.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/script.js"></script>
 </body>
 </html>

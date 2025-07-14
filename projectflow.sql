@@ -696,6 +696,8 @@ ALTER TABLE cards ADD COLUMN project_id INT(255) DEFAULT NULL;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+CREATE UNIQUE INDEX idx_project_id ON projects(project_id);
+
 CREATE TABLE project_employees (
     id INT AUTO_INCREMENT PRIMARY KEY,
     project_id VARCHAR(50),
@@ -706,3 +708,4 @@ CREATE TABLE project_employees (
 
 ALTER TABLE cards ADD COLUMN assigned_to INT NULL;
 ALTER TABLE cards ADD CONSTRAINT fk_card_assignee FOREIGN KEY (assigned_to) REFERENCES employees(id);
+ALTER TABLE documents ADD COLUMN card_id INT NULL;

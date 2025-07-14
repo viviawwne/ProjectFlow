@@ -1,6 +1,6 @@
 <%
-    const loguser = session?.user?.username || 'User';
-    const logemail = session?.user?.email || '';
+    const loguser = session?.user?.username || 'Viviane';
+    const logemail = session?.user?.email || 'viviane@gmail.com';
     const logpicture = session?.user?.picture || 'default.png';
     const pagetitle = typeof title !== 'undefined' ? title : '';
 %>
@@ -75,7 +75,6 @@
                 </a>
                 <ul class="sidebar-menu sidebar-menu-dropdown-content">
                     <li><a href="/admin/documentation">Documentos</a></li>
-                    <li><a href="/admin/documentation/api">Referência da API</a></li>
                 </ul>
             </li>
 

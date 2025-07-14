@@ -76,7 +76,7 @@
                                         <div class="row">
                                             <div class="col-12 mb-10">
                                                 <div class="mt-0 text-start">
-                                                    <a href="/admin/project/<%= project.id %>" class="box-title mb-0 mt-1 mb-3 font-w600 fs-18"><%= project.project_title %></a>
+                                                    <a href="/admin/project/details?data=<%= project.id %>" class="box-title mb-0 mt-1 mb-3 font-w600 fs-18"><%= project.project_title %></a>
                                                     <p class="fs-14 font-w500 text-muted mb-6"><%= project.department %></p>
                                                     <span class="fs-13  mt-2 text-muted"><%= project.description %></span>
                                                 </div>
@@ -105,7 +105,7 @@
                                     <thead>
                                         <tr class="top">
                                             <th class="text-center">Nº</th>
-                                            <th>Tarefa</th>
+                                            <th>Nome</th>
                                             <th>Prioridade</th>
                                             <th>Data de Início</th>
                                             <th>Prazo</th>
@@ -117,7 +117,11 @@
                                         <% projectList.forEach(project => { %>
                                             <tr>
                                                 <td class="text-center"><%= project.project_id %></td>
-                                                <td><a href="#" class="d-flex"><span><%= project.project_title %></span></a></td>
+                                                <td>
+                                                    <a href="/admin/project/details?data=<%= project.project_id %>" class="d-flex">
+                                                        <span><%= project.project_title %></span>
+                                                    </a>
+                                                </td>
                                                 <td>
                                                     <% let badge = project.priority === "High" ? "badge-danger-light" :
                                                                   project.priority === "Medium" ? "badge-warning-light" :
