@@ -8,7 +8,7 @@ const clientController = require('../../controllers/admin/ClientController');
 // Configuração do storage para upload da imagem do cliente
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(__dirname, '../../../public/images/client');
+    const dir = path.join(process.cwd(), 'src/public/images/client');
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
